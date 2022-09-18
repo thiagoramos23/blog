@@ -3,6 +3,11 @@ defmodule BlogWeb.AboutLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    {:ok, socket |> assign(:page_path, "")}
+  end
+
+  @impl true
+  def handle_params(_params, url, socket) do
+    {:noreply, socket |> assign(:page_path, url)}
   end
 end
