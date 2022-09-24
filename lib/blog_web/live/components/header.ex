@@ -1,6 +1,5 @@
 defmodule BlogWeb.Components.Header do
   use Phoenix.Component
-  alias BlogWeb.Router.Helpers, as: Routes
 
   def header(assigns) do
     ~H"""

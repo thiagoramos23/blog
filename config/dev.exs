@@ -61,7 +61,7 @@ config :blog, BlogWeb.Endpoint,
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
       ~r"lib/blog_web/(live|views)/.*(ex)$",
-      ~r"lib/blog_web/templates/.*(eex|md)$"
+      ~r"lib/blog_web/templates/.*(eex)$"
     ]
   ]
 

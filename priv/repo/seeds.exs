@@ -13,12 +13,16 @@
 alias Blog.Posts.Article
 alias Blog.Repo
 
+markdown = File.read!("priv/posts/post.html.md")
+converted_post = Earmark.as_html!(markdown)
+
 %Article{}
 |> Article.changeset(%{
   title: "Crafting a design system for a multiplanetary future",
-  slug: "crafting-a-design-system-for-a-multiplanetary-future",
-  body:
-    "Most companies try to stay ahead of the curve when it comes to visual design, but for Planetaria we needed to create a brand that would still inspire us 100 years from now when humanity has spread across our entire solar system.",
+  slug: "2022-09-14-test-post",
+  body: converted_post,
+  summary:
+    "When you’re building a website for a company as ambitious as Planetaria, you need to make an impression. I wanted people to visit our website and see animations that looked more realistic than reality itself.",
   date: "2022-09-05"
 })
 |> Repo.insert()
@@ -28,6 +32,8 @@ alias Blog.Repo
   title: "Introducing Animaginary: High performance web animations",
   slug: "introducing-animaginary-high-performance-web-animations",
   body:
+    "When you’re building a website for a company as ambitious as Planetaria, you need to make an impression. I wanted people to visit our website and see animations that looked more realistic than reality itself.",
+  summary:
     "When you’re building a website for a company as ambitious as Planetaria, you need to make an impression. I wanted people to visit our website and see animations that looked more realistic than reality itself.",
   date: "2022-09-02"
 })
@@ -39,6 +45,8 @@ alias Blog.Repo
   slug: "rewriting-the-cosmos-kernel-in-rust",
   body:
     "When we released the first version of cosmOS last year, it was written in Go. Go is a wonderful programming language, but it’s been a while since I’ve seen an article on the front page of Hacker News about rewriting some important tool in Go and I see articles on there about rewriting things in Rust every single week.",
+  summary:
+    "When you’re building a website for a company as ambitious as Planetaria, you need to make an impression. I wanted people to visit our website and see animations that looked more realistic than reality itself.",
   date: "2022-07-14"
 })
 |> Repo.insert()

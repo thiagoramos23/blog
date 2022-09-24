@@ -46,9 +46,6 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-# Config for the Markdown Template Engine
-config :phoenix, :template_engines, md: PhoenixMarkdown.Engine
-
 config :tailwind,
   version: "3.1.8",
   default: [

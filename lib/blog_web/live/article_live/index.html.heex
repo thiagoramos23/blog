@@ -12,8 +12,9 @@
               <%= for article <- @articles do %>
                 <BlogWeb.Components.Article.article
                 	title={article.title}
-                	description={article.body}
-                	date={article.date}
+                	summary={article.summary}
+                  date={article.date}
+                  route={Routes.article_show_path(@socket, :show, article.slug)}
               	/>
 							<% end %>
             </div>

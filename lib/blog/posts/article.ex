@@ -3,6 +3,7 @@ defmodule Blog.Posts.Article do
   import Ecto.Changeset
 
   schema "articles" do
+    field :summary, :string
     field :body, :string
     field :slug, :string
     field :title, :string
@@ -11,7 +12,7 @@ defmodule Blog.Posts.Article do
     timestamps()
   end
 
-  @required_fields [:title, :slug, :body, :date]
+  @required_fields [:title, :slug, :body, :date, :summary]
 
   @doc false
   def changeset(article, attrs) do

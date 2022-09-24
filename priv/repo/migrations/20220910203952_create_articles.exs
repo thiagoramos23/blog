@@ -8,6 +8,7 @@ defmodule Blog.Repo.Migrations.CreateArticles do
       add :title, :string
       add :slug, :string
       add :body, :citext
+      add :summary, :citext
       add :date, :date
 
       timestamps()
