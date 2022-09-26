@@ -15,9 +15,10 @@ defmodule Blog.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Blog.PubSub},
       # Start the Endpoint (http/https)
-      BlogWeb.Endpoint
+      BlogWeb.Endpoint,
       # Start a worker by calling: Blog.Worker.start_link(arg)
       # {Blog.Worker, arg}
+      Blog.Posts.PostSupervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

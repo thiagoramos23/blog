@@ -13,16 +13,23 @@
 alias Blog.Posts.Article
 alias Blog.Repo
 
-markdown = File.read!("priv/posts/post.html.md")
-converted_post = Earmark.as_html!(markdown)
+file_string =
+  "priv/posts/post.html.md"
+  |> File.read!()
+  |> String.split("\n")
+
+[title, summary] =
+  file_string
+  |> Enum.take(2)
+
+markdown = file_string |> Enum.drop(2) |> Earmark.as_html!()
 
 %Article{}
 |> Article.changeset(%{
-  title: "Crafting a design system for a multiplanetary future",
+  title: title,
   slug: "2022-09-14-test-post",
-  body: converted_post,
-  summary:
-    "When you’re building a website for a company as ambitious as Planetaria, you need to make an impression. I wanted people to visit our website and see animations that looked more realistic than reality itself.",
+  body: markdown,
+  summary: summary,
   date: "2022-09-05"
 })
 |> Repo.insert()

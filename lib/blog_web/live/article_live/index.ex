@@ -1,7 +1,7 @@
 defmodule BlogWeb.ArticleLive.Index do
   use BlogWeb, :live_view
 
-  alias Blog.Posts
+  alias Blog.Posts.PostsAgent
 
   @impl true
   def mount(_params, _session, socket) do
@@ -17,6 +17,6 @@ defmodule BlogWeb.ArticleLive.Index do
   end
 
   defp list_articles do
-    Posts.list_articles()
+    PostsAgent.get_all_posts()
   end
 end
