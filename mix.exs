@@ -51,7 +51,8 @@ defmodule Blog.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
       {:timex, "~> 3.7"},
-      {:earmark, "~> 1.4"}
+      {:earmark, "~> 1.4"},
+      {:req, "~> 0.3.0"}
     ]
   end
 

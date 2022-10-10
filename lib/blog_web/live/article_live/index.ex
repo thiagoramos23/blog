@@ -17,6 +17,7 @@ defmodule BlogWeb.ArticleLive.Index do
   end
 
   defp list_articles do
+    # Blog.Repo.all(Blog.Posts.Article)
     PostsAgent.get_all_posts()
   end
 end

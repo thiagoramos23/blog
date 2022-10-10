@@ -10,6 +10,9 @@ defmodule Blog.Repo.Migrations.CreateArticles do
       add :body, :citext
       add :summary, :citext
       add :date, :date
+      add :hash_id, :string
+      add :html_url, :string
+      add :category_id, references(:categories, on_delete: :nothing)
 
       timestamps()
     end
