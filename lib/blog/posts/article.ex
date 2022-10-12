@@ -10,6 +10,7 @@ defmodule Blog.Posts.Article do
     field :body, :string
     field :slug, :string
     field :title, :string
+    field :author, :string
     field :date, :date
     field :hash_id, :string
     field :html_url, :string
@@ -18,13 +19,27 @@ defmodule Blog.Posts.Article do
     timestamps()
   end
 
-  @required_fields [:title, :slug, :body, :date, :summary, :category_id, :hash_id, :html_url]
+  @required_fields [
+    :title,
+    :slug,
+    :body,
+    :date,
+    :summary,
+    :category_id,
+    :hash_id,
+    :html_url,
+    :author_name
+  ]
 
   @doc false
   def changeset(article, attrs) do
     article
     |> cast(attrs, @required_fields)
     |> validate_required(@required_fields)
+  end
+
+  def new_post(params) do
+    struct!(__MODULE__, params)
   end
 
   def get_articles() do

@@ -12,10 +12,13 @@ defmodule Blog.Repo.Migrations.CreateArticles do
       add :date, :date
       add :hash_id, :string
       add :html_url, :string
+      add :author, :string
       add :category_id, references(:categories, on_delete: :nothing)
 
       timestamps()
     end
+
+    create unique_index(:articles, [:slug])
   end
 
   def down do

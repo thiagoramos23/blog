@@ -7,6 +7,7 @@ defmodule Blog.Posts do
   alias Blog.Repo
 
   alias Blog.Posts.Article
+  alias Blog.Posts.Category
 
   @doc """
   Returns the list of articles.
@@ -52,4 +53,20 @@ defmodule Blog.Posts do
 
   """
   def get_article_by_slug(slug), do: Repo.get_by(Article, slug: slug)
+
+  @doc """
+  Gets a single category by slug.
+
+  Raises `Ecto.NoResultsError` if the Category does not exist.
+
+  ## Examples
+
+      iex> get_category_by_slug("craft-some-parts")
+      %Article{}
+
+      iex> get_category_by_slug("does-not-exist")
+      nil
+
+  """
+  def get_category_by_slug(slug), do: Repo.get_by(Category, slug: slug)
 end
