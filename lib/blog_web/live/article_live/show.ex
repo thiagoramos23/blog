@@ -1,7 +1,7 @@
 defmodule BlogWeb.ArticleLive.Show do
   use BlogWeb, :live_view
 
-  alias Blog.Posts.PostsAgent
+  alias Blog.Posts
 
   @impl true
   def mount(_params, _session, socket) do
@@ -12,6 +12,6 @@ defmodule BlogWeb.ArticleLive.Show do
   def handle_params(%{"slug" => slug}, _, socket) do
     {:noreply,
      socket
-     |> assign(:article, PostsAgent.get_post_by_slug(slug))}
+     |> assign(:article, Posts.get_article_by_slug(slug))}
   end
 end

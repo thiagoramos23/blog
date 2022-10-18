@@ -31,9 +31,7 @@ defmodule Blog.Writer.PostWriter do
 
   def get_posts_and_upsert() do
     articles_on_github = posts_on_github()
-
-    articles = upsert_articles(articles_on_github)
-    update_in_memory_posts(articles)
+    upsert_articles(articles_on_github)
   end
 
   defp schedule_work do
@@ -52,15 +50,7 @@ defmodule Blog.Writer.PostWriter do
         ]
       ]
 
-      {:ok, article} = Repo.insert(new_article, on_conflict: on_conflict, conflict_target: :slug)
-      article
-    end)
-  end
-
-  defp update_in_memory_posts(articles) do
-    articles
-    |> Enum.each(fn article ->
-      PostsAgent.save(article)
+      Repo.insert(new_article, on_conflict: on_conflict, conflict_target: :slug)
     end)
   end
 

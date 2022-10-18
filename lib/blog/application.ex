@@ -18,7 +18,6 @@ defmodule Blog.Application do
       BlogWeb.Endpoint,
       # Start a worker by calling: Blog.Worker.start_link(arg)
       # {Blog.Worker, arg}
-      Blog.Posts.PostSupervisor,
       Blog.Writer.PostWriterSupervisor
     ]
 
