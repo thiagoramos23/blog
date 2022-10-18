@@ -28,7 +28,7 @@ defmodule Blog.Posts.Article do
     :category_id,
     :hash_id,
     :html_url,
-    :author_name
+    :author
   ]
 
   @doc false

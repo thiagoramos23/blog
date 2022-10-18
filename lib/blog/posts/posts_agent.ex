@@ -1,11 +1,6 @@
 defmodule Blog.Posts.PostsAgent do
   use Agent
 
-  alias Blog.Posts.Article
-  alias Blog.Repo
-
-  @files_path "priv/posts/"
-
   def start_link(_initial_state) do
     Agent.start_link(fn -> %{} end, name: __MODULE__)
   end
@@ -22,7 +17,7 @@ defmodule Blog.Posts.PostsAgent do
 
   def save(article) do
     Agent.update(__MODULE__, fn state ->
-      Map.update(state, article.title, article)
+      Map.update(state, article.slug, article, fn _ -> article end)
     end)
   end
 end

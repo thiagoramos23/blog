@@ -19,52 +19,49 @@ defmodule Blog.Writer.PostWriter do
 
   def handle_continue(:get_and_write, state) do
     get_posts_and_upsert()
+    # schedule_work()
+    {:noreply, state}
+  end
+
+  def handle_info(:scheduled_work, state) do
+    get_posts_and_upsert()
+    schedule_work()
     {:noreply, state}
   end
 
   def get_posts_and_upsert() do
-    articles_recorded = Article.get_articles_order_by(:slug)
     articles_on_github = posts_on_github()
 
-    articles = upsert_articles(articles_recorded, articles_on_github)
+    articles = upsert_articles(articles_on_github)
     update_in_memory_posts(articles)
   end
 
-  defp upsert_articles(old_articles, new_articles) do
-    Enum.zip(old_articles, new_articles)
-    |> Enum.map(fn {old_article, new_article} ->
-      if old_article.slug == new_article.slug && old_article.hash_id != new_article.hash_id do
-        on_conflict = [
-          set: [
-            body: new_article.body,
-            summary: new_article.summary,
-            hash_id: new_article.hash_id
-          ]
-        ]
-
-        Repo.insert(new_article, on_conflict: on_conflict, conflict_target: :slug)
-      end
-
-      new_article
-    end)
-    |> then(&insert_new_articles(&1, new_articles))
+  defp schedule_work do
+    Process.send_after(self(), :scheduled_work, 86400 * 100)
   end
 
-  defp insert_new_articles(inserted_articles, github_articles) do
-    github_articles
-    |> Enum.filter(fn article ->
-      result =
-        Enum.find(inserted_articles, fn inserted_article ->
-          inserted_article.slug == article.slug
-        end)
+  defp upsert_articles(new_articles) do
+    new_articles
+    |> Enum.map(fn new_article ->
+      on_conflict = [
+        set: [
+          title: new_article.title,
+          body: new_article.body,
+          summary: new_article.summary,
+          hash_id: new_article.hash_id
+        ]
+      ]
 
-      is_nil(result)
+      {:ok, article} = Repo.insert(new_article, on_conflict: on_conflict, conflict_target: :slug)
+      article
     end)
-    |> IO.inspect(label: :inserting)
-    |> then(&Repo.insert(&1))
   end
 
   defp update_in_memory_posts(articles) do
+    articles
+    |> Enum.each(fn article ->
+      PostsAgent.save(article)
+    end)
   end
 
   defp posts_on_github() do
@@ -100,6 +97,7 @@ defmodule Blog.Writer.PostWriter do
         body: post_content,
         html_url: html_url,
         hash_id: hash_id,
+        date: Date.from_iso8601!(metadata.date),
         category_id: post_category.id,
         slug: name |> String.split(".") |> hd()
       })
@@ -111,8 +109,8 @@ defmodule Blog.Writer.PostWriter do
     String.split(post_content, "delimiter\n")
   end
 
-  defp get_metadata(post_content) do
-    post_content
+  defp get_metadata(metadata) do
+    metadata
     |> String.split("\n", trim: true)
     |> Enum.reduce(%{}, fn item, acc ->
       [key, value] =
@@ -123,7 +121,7 @@ defmodule Blog.Writer.PostWriter do
     end)
   end
 
-  defp get_content(post_content), do: post_content |> Enum.drop(1)
+  defp get_content(post_content), do: post_content |> List.last()
 
   defp headers() do
     [{"Authorization", "Bearer #{token()}"}, {"Accept", "application/vnd.github+json"}]
