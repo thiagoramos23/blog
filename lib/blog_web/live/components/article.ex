@@ -17,7 +17,7 @@ defmodule BlogWeb.Components.Article do
             <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
           </span><%= @date %>
         </time>
-        <p class="relative truncate z-10 mt-2 text-sm text-zinc-600 dark:text-zinc-400"><%= String.slice(@summary, 0..300) %></p>
+        <p class="relative z-10 mt-2 text-sm text-zinc-600 dark:text-zinc-400"><%= String.slice(@summary, 0..300) %></p>
         <div aria-hidden="true" class="relative z-10 flex items-center mt-4 text-sm font-medium text-teal-500">
           <.link navigate={@route} class="relative z-10">
             Read article

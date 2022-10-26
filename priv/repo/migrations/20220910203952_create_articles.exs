@@ -8,6 +8,7 @@ defmodule Blog.Repo.Migrations.CreateArticles do
       add :title, :string
       add :slug, :string
       add :body, :citext
+      add :html_body, :citext
       add :summary, :citext
       add :date, :date
       add :hash_id, :string
@@ -19,6 +20,7 @@ defmodule Blog.Repo.Migrations.CreateArticles do
     end
 
     create unique_index(:articles, [:slug])
+    create unique_index(:articles, [:hash_id])
   end
 
   def down do

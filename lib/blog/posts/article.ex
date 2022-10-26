@@ -8,6 +8,7 @@ defmodule Blog.Posts.Article do
   schema "articles" do
     field :summary, :string
     field :body, :string
+    field :html_body, :string
     field :slug, :string
     field :title, :string
     field :author, :string

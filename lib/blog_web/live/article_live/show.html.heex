@@ -20,8 +20,8 @@
                   <h1 class="mt-4 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
                     <%= @article.title %>
                   </h1>
-                  <div class="mt-2 prose dark:prose-invert">
-                    <%= raw @article.body %>
+                  <div class="prose prose-h1:mt-1 prose-h1:mb-1 prose-h2:mt-10 prose-h3:mt-8 prose-ul:mt-2 prose-li:mb-1 prose-li:mt-1 prose-p:mt-5 prose-p:mb-2 dark:prose-invert">
+                    <%= raw @article.html_body %>
                   </div>
                 </div>
               </div>

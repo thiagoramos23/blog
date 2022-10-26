@@ -52,6 +52,8 @@ defmodule Blog.MixProject do
       {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
       {:timex, "~> 3.7"},
       {:earmark, "~> 1.4"},
+      {:makeup, "~> 1.1.0"},
+      {:makeup_elixir, "~> 0.14.0"},
       {:req, "~> 0.3.0"}
     ]
   end

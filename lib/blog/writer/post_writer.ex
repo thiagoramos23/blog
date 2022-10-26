@@ -3,10 +3,9 @@ defmodule Blog.Writer.PostWriter do
 
   alias Blog.Posts
   alias Blog.Posts.Article
-  alias Blog.Posts.PostsAgent
   alias Blog.Repo
 
-  @url "https://api.github.com/repos/thiagoramos23/posts/contents/posts"
+  @url "https://api.github.com/repos/thiagoramos23/second-brain/contents/second_brain/Projects/guides"
   @branch "main"
 
   def start_link(_args) do
@@ -45,6 +44,7 @@ defmodule Blog.Writer.PostWriter do
         set: [
           title: new_article.title,
           body: new_article.body,
+          html_body: Earmark.as_html!(new_article.body),
           summary: new_article.summary,
           hash_id: new_article.hash_id
         ]
