@@ -45,7 +45,7 @@ defmodule Highlighter do
         formatter_options: [highlight_tag: "span"]
       )
 
-    ~s(<pre class="bg-gray-100 dark:bg-slate-800"><code class="makeup #{lang} highlight">#{highlighted}</code></pre>)
+    ~s(<pre class="bg-gray-100 dark:bg-slate-300"><code class="makeup #{lang} highlight">#{highlighted}</code></pre>)
   end
 
   entities = [{"&amp;", ?&}, {"&lt;", ?<}, {"&gt;", ?>}, {"&quot;", ?"}, {"&#39;", ?'}]
