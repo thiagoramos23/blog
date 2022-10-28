@@ -6,18 +6,31 @@
       </div>
     </div>
     <div class="relative">
-      <BlogWeb.Components.Header.header>
+      <BlogWeb.Components.Header.header image={Routes.static_path(@socket, "/images/profile.jpg")}>
         <ul class="flex px-3 text-sm font-medium rounded-full shadow-lg bg-white/90 text-zinc-800 shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
           <li>
-            <a class="relative block px-3 py-2 transition hover:text-teal-500 dark:hover:text-teal-400" href="/about">
-              <span class="absolute h-px inset-x-1 -bottom-px bg-gradient-to-r from-teal-500/0 via-teal-500/40 to-teal-500/0 dark:from-teal-400/0 dark:via-teal-400/40 dark:to-teal-400/0"></span>
-              About
-            </a>
+            <%= if @about_active do %>
+              <a class="relative block px-3 py-2 transition text-teal-400 hover:text-teal-500 dark:text-teal-400 dark:hover:text-teal-400" href="/about">
+                <span class="absolute h-px inset-x-1 -bottom-px bg-gradient-to-r from-teal-500/0 via-teal-500/40 to-teal-500/0 dark:from-teal-400/0 dark:via-teal-400/40 dark:to-teal-400/0"></span>
+                About
+              </a>
+            <% else %>
+              <a class="relative block px-3 py-2 transition text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 dark:text-white" href="/about">
+                <span class="absolute h-px inset-x-1 -bottom-px bg-gradient-to-r from-teal-500/0 via-teal-500/40 to-teal-500/0 dark:from-teal-400/0 dark:via-teal-400/40 dark:to-teal-400/0"></span>
+                About
+              </a>
+            <% end%>
           </li>
           <li>
-            <a class="relative block px-3 py-2 text-teal-500 transition dark:text-teal-400" href="/">Articles
-              <span class="absolute h-px inset-x-1 -bottom-px bg-gradient-to-r from-teal-500/0 via-teal-500/40 to-teal-500/0 dark:from-teal-400/0 dark:via-teal-400/40 dark:to-teal-400/0"></span>
-            </a>
+            <%= if @about_active do %>
+              <a class="relative block px-3 py-2 transition text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 dark:text-gray-300" href="/">Articles
+                <span class="absolute h-px inset-x-1 -bottom-px bg-gradient-to-r from-teal-500/0 via-teal-500/40 to-teal-500/0 dark:from-teal-400/0 dark:via-teal-400/40 dark:to-teal-400/0"></span>
+              </a>
+            <% else %>
+              <a class="relative block px-3 py-2 text-teal-500 transition text-teal-400 dark:text-teal-400" href="/">Articles
+                <span class="absolute h-px inset-x-1 -bottom-px bg-gradient-to-r from-teal-500/0 via-teal-500/40 to-teal-500/0 dark:from-teal-400/0 dark:via-teal-400/40 dark:to-teal-400/0"></span>
+              </a>
+            <% end %>
           </li>
         </ul>
       </BlogWeb.Components.Header.header>

@@ -8,7 +8,8 @@ defmodule BlogWeb.ArticleLive.Index do
     {:ok,
      socket
      |> assign(:articles, list_articles())
-     |> assign(:page_path, "")}
+     |> assign(:page_path, "")
+     |> assign(:about_active, false)}
   end
 
   @impl true
