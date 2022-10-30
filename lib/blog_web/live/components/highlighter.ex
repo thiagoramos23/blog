@@ -8,6 +8,8 @@ defmodule Highlighter do
   Highlights all code block in an already generated HTML document.
   """
   def highlight(html) do
+    IO.inspect(html, label: "HTML")
+
     Regex.replace(
       ~r/<pre><code(?:\s+class="(\w*)")?>([^<]*)<\/code><\/pre>/,
       html,
@@ -25,9 +27,6 @@ defmodule Highlighter do
   defp pick_language_and_lexer(""), do: {"text", nil, []}
 
   defp pick_language_and_lexer(lang) do
-    IO.inspect(lang)
-    IO.inspect(Makeup.Registry.fetch_lexer_by_name(lang))
-
     case Makeup.Registry.fetch_lexer_by_name(lang) do
       {:ok, {lexer, opts}} -> {lang, lexer, opts}
       :error -> {lang, nil, []}
