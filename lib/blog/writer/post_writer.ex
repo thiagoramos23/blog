@@ -85,7 +85,7 @@ defmodule Blog.Writer.PostWriter do
     params =
       Map.merge(metadata, %{
         body: post_content,
-        html_url: html_url,
+        html_body: html_url,
         hash_id: hash_id,
         date: Date.from_iso8601!(metadata.date),
         category_id: post_category.id,
