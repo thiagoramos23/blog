@@ -18,7 +18,7 @@ defmodule Blog.Writer.PostWriter do
 
   def handle_continue(:get_and_write, state) do
     get_posts_and_upsert()
-    # schedule_work()
+    schedule_work()
     {:noreply, state}
   end
 
@@ -34,7 +34,7 @@ defmodule Blog.Writer.PostWriter do
   end
 
   defp schedule_work do
-    Process.send_after(self(), :scheduled_work, 86400 * 100)
+    Process.send_after(self(), :scheduled_work, 24 * 60 * 60 * 1000)
   end
 
   defp upsert_articles(new_articles) do
