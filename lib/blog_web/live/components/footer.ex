@@ -17,7 +17,7 @@ defmodule BlogWeb.Components.Footer do
                       <a class="transition hover:text-teal-500 dark:hover:text-teal-400" href="/speaking">Speaking</a>
                       -->
                     </div>
-                    <p class="text-sm text-zinc-400 dark:text-zinc-500">© <!-- --><%= Date.utc_today().year%><!-- --> TheSlowDev. All rights reserved.</p>
+                    <p class="text-sm text-zinc-400 dark:text-zinc-500">© <!-- --><%= Date.utc_today().year%><!-- --> Thiago Ramos. All rights reserved.</p>
                   </div>
                 </div>
               </div>
