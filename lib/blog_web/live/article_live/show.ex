@@ -28,6 +28,6 @@ defmodule BlogWeb.ArticleLive.Show do
 
   defp get_total_read_time(%{body: body}) do
     total_words = body |> String.split(" ") |> Enum.count()
-    div(total_words, 250)
+    div(total_words, 300)
   end
 end
