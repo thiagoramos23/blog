@@ -18,6 +18,7 @@ defmodule BlogWeb.ArticleLive.Show do
     {:noreply,
      socket
      |> assign(:article, article)
+     |> assign(:page_title, "Thiago Ramos - #{article.title}")
      |> assign(:total_read_time, get_total_read_time(article))}
   end
 
