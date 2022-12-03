@@ -54,7 +54,8 @@ defmodule Blog.MixProject do
       {:earmark, "~> 1.4"},
       {:makeup, "~> 1.1.0"},
       {:makeup_elixir, "~> 0.14.0"},
-      {:req, "~> 0.3.0"}
+      {:req, "~> 0.3.0"},
+      {:atomex, "~> 0.3.0"}
     ]
   end
 
