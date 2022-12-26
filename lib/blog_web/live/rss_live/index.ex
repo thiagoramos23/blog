@@ -26,13 +26,17 @@ defmodule BlogWeb.FeedController do
     |> Atomex.generate_document()
   end
 
-  defp get_entry(%Article{html_body: html_body, slug: slug, date: date}, url) do
+  defp get_entry(
+         %Article{html_body: html_body, summary: summary, title: title, slug: slug, date: date},
+         url
+       ) do
     Entry.new(
       "#{url}articles/#{slug}",
       DateTime.new!(date, ~T[00:00:00]),
-      "Article by Thiago Ramos"
+      title
     )
     |> Entry.author("Thiago Ramos", uri: "#{url}about")
+    |> Entry.add_field(:summary, %{}, summary)
     |> Entry.content(html_body, type: "html")
     |> Entry.build()
   end

@@ -44,7 +44,7 @@ defmodule Blog.Writer.PostWriter do
         set: [
           title: new_article.title,
           body: new_article.body,
-          html_body: Earmark.as_html!(new_article.body),
+          html_body: new_article.html_body,
           summary: new_article.summary,
           hash_id: new_article.hash_id
         ]
@@ -74,18 +74,18 @@ defmodule Blog.Writer.PostWriter do
          },
          post_category
        ) do
-    post_metadata_and_content =
+    [post_metadata, post_content] =
       donwload_url
       |> do_request()
       |> split_metadata_and_content()
 
-    metadata = post_metadata_and_content |> hd() |> get_metadata()
-    post_content = post_metadata_and_content |> get_content()
+    metadata = post_metadata |> parse_metadata()
 
     params =
       Map.merge(metadata, %{
         body: post_content,
-        html_body: html_url,
+        html_body: Earmark.as_html!(post_content),
+        html_url: html_url,
         hash_id: hash_id,
         date: Date.from_iso8601!(metadata.date),
         category_id: post_category.id,
@@ -99,7 +99,7 @@ defmodule Blog.Writer.PostWriter do
     String.split(post_content, "delimiter\n")
   end
 
-  defp get_metadata(metadata) do
+  defp parse_metadata(metadata) do
     metadata
     |> String.split("\n", trim: true)
     |> Enum.reduce(%{}, fn item, acc ->
@@ -110,8 +110,6 @@ defmodule Blog.Writer.PostWriter do
       Map.put(acc, String.to_atom(key), String.trim(value))
     end)
   end
-
-  defp get_content(post_content), do: post_content |> List.last()
 
   defp headers() do
     [{"Authorization", "Bearer #{token()}"}, {"Accept", "application/vnd.github+json"}]

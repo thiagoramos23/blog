@@ -19,7 +19,9 @@ defmodule Blog.Posts do
 
   """
   def list_articles do
-    Repo.all(Article)
+    Article
+    |> order_by(desc: :date)
+    |> Repo.all()
   end
 
   @doc """
