@@ -20,58 +20,44 @@ file_string =
 
 [title, summary] =
   file_string
-  |> Enum.take(2)
+  |> Enum.take(1)
 
-markdown = file_string |> Enum.drop(2) |> Earmark.as_html!()
+markdown = file_string |> Enum.drop(1) |> Earmark.as_html!()
 
 {:ok, posts_category} =
   %Category{}
   |> Category.changeset(%{name: "Posts", slug: "posts"})
   |> Repo.insert()
 
-# %Article{}
-# |> Article.changeset(%{
-#   title: title,
-#   author: "Thiago Ramos",
-#   slug: "2022-09-14-test-post",
-#   body: markdown,
-#   summary: summary,
-#   date: "2022-09-05",
-#   category_id: posts_category.id,
-#   hash_id: :crypto.hash(:sha, markdown) |> Base.encode64()
-# })
-# |> Repo.insert()
+html_body = ~s(
+<h2>
+Special Announcement</h2>
+<p>
+Hey folks, I launch my first Elixir/Phoenix LiveView course. In this course I am teaching you how to create the Wordle Game with Elixir and Phoenix LiveView. In this course I teach you about elixir, TDD, how to organize your project, how to create and use function components, how to create and use animations with TailwindCSS and Phoenix LiveView and in the end you will have a complete functional wordle game to show to your friends.</p>
+<p>
+The course is with a special offer with 50% of discount. Go here and check it out:</p>
+<p>
+<a href="https://indiecourses.com/catalog/54c9e6b0-f39e-43a5-b775-a0de3f634b58">https://indiecourses.com/catalog/54c9e6b0-f39e-43a5-b775-a0de3f634b58</a></p>
+<h2>
+How to create migrations with Ecto And How to insert data with associations</h2>
+<p>
+This post belongs to a series of posts about Ecto. This is the first one.</p>
+<p>
+When you are starting your project you probably have a design concept or a sketch of the UI ready. But one of the things you also need to have is the domain model of your application and they are usually tables in a database.</p>
+)
 
-# body =
-#   "When you’re building a website for a company as ambitious as Planetaria, you need to make an impression. I wanted people to visit our website and see animations that looked more realistic than reality itself."
-
-# %Article{}
-# |> Article.changeset(%{
-#   title: "Introducing Animaginary: High performance web animations",
-#   author: "Thiago Ramos",
-#   slug: "introducing-animaginary-high-performance-web-animations",
-#   body: body,
-#   summary:
-#     "When you’re building a website for a company as ambitious as Planetaria, you need to make an impression. I wanted people to visit our website and see animations that looked more realistic than reality itself.",
-#   date: "2022-09-02",
-#   category_id: posts_category.id,
-#   hash_id: :crypto.hash(:sha, body) |> Base.encode64()
-# })
-# |> Repo.insert()
-
-# body2 =
-#   "When we released the first version of cosmOS last year, it was written in Go. Go is a wonderful programming language, but it’s been a while since I’ve seen an article on the front page of Hacker News about rewriting some important tool in Go and I see articles on there about rewriting things in Rust every single week."
-
-# %Article{}
-# |> Article.changeset(%{
-#   title: "Rewriting the cosmOS kernel in Rust",
-#   author: "Thiago Ramos",
-#   slug: "rewriting-the-cosmos-kernel-in-rust",
-#   body: body2,
-#   summary:
-#     "When you’re building a website for a company as ambitious as Planetaria, you need to make an impression. I wanted people to visit our website and see animations that looked more realistic than reality itself.",
-#   date: "2022-07-14",
-#   category_id: posts_category.id,
-#   hash_id: :crypto.hash(:sha, body2) |> Base.encode64()
-# })
-# |> Repo.insert()
+{:ok, _article} =
+  %Article{}
+  |> Article.changeset(%{
+    title: title,
+    author: "Thiago Ramos",
+    slug: "2022-09-14-test-post",
+    html_url: "2022-09-14-test-post",
+    body: markdown,
+    html_body: html_body,
+    summary: summary,
+    date: "2022-09-05",
+    category_id: posts_category.id,
+    hash_id: :crypto.hash(:sha, markdown) |> Base.encode64()
+  })
+  |> Repo.insert()

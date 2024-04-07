@@ -22,42 +22,43 @@ defmodule BlogWeb.Telemetry do
   def metrics do
     [
       # Phoenix Metrics
-      summary("phoenix.endpoint.stop.duration",
-        unit: {:native, :millisecond}
-      ),
+      # summary("phoenix.endpoint.stop.duration",
+      #   unit: {:native, :millisecond}
+      # ),
       summary("phoenix.router_dispatch.stop.duration",
-        tags: [:route],
+        tags: [:method, :request_path, :remote_ip, :route],
+        tag_values: &get_and_put_http_method/1,
         unit: {:native, :millisecond}
-      ),
+      )
 
       # Database Metrics
-      summary("blog.repo.query.total_time",
-        unit: {:native, :millisecond},
-        description: "The sum of the other measurements"
-      ),
-      summary("blog.repo.query.decode_time",
-        unit: {:native, :millisecond},
-        description: "The time spent decoding the data received from the database"
-      ),
-      summary("blog.repo.query.query_time",
-        unit: {:native, :millisecond},
-        description: "The time spent executing the query"
-      ),
-      summary("blog.repo.query.queue_time",
-        unit: {:native, :millisecond},
-        description: "The time spent waiting for a database connection"
-      ),
-      summary("blog.repo.query.idle_time",
-        unit: {:native, :millisecond},
-        description:
-          "The time the connection spent waiting before being checked out for the query"
-      ),
-
-      # VM Metrics
-      summary("vm.memory.total", unit: {:byte, :kilobyte}),
-      summary("vm.total_run_queue_lengths.total"),
-      summary("vm.total_run_queue_lengths.cpu"),
-      summary("vm.total_run_queue_lengths.io")
+      # summary("blog.repo.query.total_time",
+      #   unit: {:native, :millisecond},
+      #   description: "The sum of the other measurements"
+      # ),
+      # summary("blog.repo.query.decode_time",
+      #   unit: {:native, :millisecond},
+      #   description: "The time spent decoding the data received from the database"
+      # ),
+      # summary("blog.repo.query.query_time",
+      #   unit: {:native, :millisecond},
+      #   description: "The time spent executing the query"
+      # ),
+      # summary("blog.repo.query.queue_time",
+      #   unit: {:native, :millisecond},
+      #   description: "The time spent waiting for a database connection"
+      # ),
+      # summary("blog.repo.query.idle_time",
+      #   unit: {:native, :millisecond},
+      #   description:
+      #     "The time the connection spent waiting before being checked out for the query"
+      # ),
+      #
+      # # VM Metrics
+      # summary("vm.memory.total", unit: {:byte, :kilobyte}),
+      # summary("vm.total_run_queue_lengths.total"),
+      # summary("vm.total_run_queue_lengths.cpu"),
+      # summary("vm.total_run_queue_lengths.io")
     ]
   end
 

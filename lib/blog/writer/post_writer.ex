@@ -17,7 +17,7 @@ defmodule Blog.Writer.PostWriter do
   end
 
   def handle_continue(:get_and_write, state) do
-    get_posts_and_upsert()
+    # get_posts_and_upsert()
     schedule_work()
     {:noreply, state}
   end

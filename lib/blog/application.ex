@@ -18,7 +18,9 @@ defmodule Blog.Application do
       BlogWeb.Endpoint,
       # Start a worker by calling: Blog.Worker.start_link(arg)
       # {Blog.Worker, arg}
-      Blog.Writer.PostWriterSupervisor
+      Blog.Writer.PostWriterSupervisor,
+      Blog.Metric.StatsServer,
+      {Task.Supervisor, name: Blog.Metric.ViewMetricSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

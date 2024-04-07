@@ -32,10 +32,12 @@ defmodule Blog.Posts.Article do
     :author
   ]
 
+  @valid_fields [:html_body] ++ @required_fields
+
   @doc false
   def changeset(article, attrs) do
     article
-    |> cast(attrs, @required_fields)
+    |> cast(attrs, @valid_fields)
     |> validate_required(@required_fields)
   end
 
