@@ -5,7 +5,7 @@ defmodule Blog.Metric.ViewMetric do
   schema "view_metrics" do
     field :request_path, :string
     field :method, :string
-    field :socket_id, :string
+    field :remote_ip, :string
 
     timestamps()
   end
@@ -13,8 +13,7 @@ defmodule Blog.Metric.ViewMetric do
   @doc false
   def changeset(view_metric, attrs) do
     view_metric
-    |> cast(attrs, [:request_path, :method, :socket_id])
-    |> validate_required([:request_path, :method, :socket_id])
-    |> unique_constraint([:socket_id, :request_path, :method])
+    |> cast(attrs, [:request_path, :method, :remote_ip])
+    |> validate_required([:request_path, :method, :remote_ip])
   end
 end

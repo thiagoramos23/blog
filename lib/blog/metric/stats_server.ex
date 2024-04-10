@@ -21,12 +21,6 @@ defmodule Blog.Metric.StatsServer do
 
   @impl true
   def handle_cast({:record_metric, metadata}, state) do
-    Process.send_after(self(), {:delayed_record_metric, metadata}, 10_000)
-    {:noreply, state}
-  end
-
-  @impl true
-  def handle_info({:delayed_record_metric, metadata}, state) do
     :telemetry.execute([:blog, :visit_counter], %{}, metadata)
     {:noreply, state}
   end
@@ -35,7 +29,5 @@ defmodule Blog.Metric.StatsServer do
     Task.Supervisor.start_child(Blog.Metric.ViewMetricSupervisor, fn ->
       Metrics.create_view_metric(metadata)
     end)
-
-    Logger.info("Metric: #{inspect(metadata)}")
   end
 end

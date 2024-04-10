@@ -3,7 +3,6 @@ defmodule BlogWeb.ArticleLive.Show do
 
   alias Blog.Posts
   alias Blog.Metrics
-  alias Blog.Metric.StatsServer
 
   @impl true
   def mount(_params, _session, socket) do
@@ -16,7 +15,6 @@ defmodule BlogWeb.ArticleLive.Show do
 
   @impl true
   def handle_params(%{"slug" => slug}, url, socket) do
-    StatsServer.record_metric(%{request_path: url, method: "get", socket_id: socket.id})
     article = get_article_by_slug(slug)
 
     {:noreply,

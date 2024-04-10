@@ -20,7 +20,7 @@ file_string =
 
 [title, summary] =
   file_string
-  |> Enum.take(1)
+  |> Enum.take(2)
 
 markdown = file_string |> Enum.drop(1) |> Earmark.as_html!()
 

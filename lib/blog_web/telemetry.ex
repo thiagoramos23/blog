@@ -1,6 +1,5 @@
 defmodule BlogWeb.Telemetry do
   use Supervisor
-  import Telemetry.Metrics
 
   def start_link(arg) do
     Supervisor.start_link(__MODULE__, arg, name: __MODULE__)
@@ -25,11 +24,10 @@ defmodule BlogWeb.Telemetry do
       # summary("phoenix.endpoint.stop.duration",
       #   unit: {:native, :millisecond}
       # ),
-      summary("phoenix.router_dispatch.stop.duration",
-        tags: [:method, :request_path, :remote_ip, :route],
-        tag_values: &get_and_put_http_method/1,
-        unit: {:native, :millisecond}
-      )
+      # summary("phoenix.router_dispatch.stop.duration",
+      #   tags: [:method, :request_path, :remote_ip, :route],
+      #   unit: {:native, :millisecond}
+      # )
 
       # Database Metrics
       # summary("blog.repo.query.total_time",

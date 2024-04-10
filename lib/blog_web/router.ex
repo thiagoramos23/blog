@@ -4,10 +4,23 @@ defmodule BlogWeb.Router do
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
+    plug :instrospect
     plug :fetch_live_flash
     plug :put_root_layout, {BlogWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+  end
+
+  alias Blog.Metric.StatsServer
+
+  def instrospect(conn, _) do
+    StatsServer.record_metric(%{
+      request_path: conn.request_path,
+      method: conn.method,
+      remote_ip: conn.remote_ip |> Tuple.to_list() |> Enum.join(".")
+    })
+
+    conn
   end
 
   pipeline :api do
