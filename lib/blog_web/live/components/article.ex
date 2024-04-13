@@ -18,7 +18,7 @@ defmodule BlogWeb.Components.Article do
           </span><%= @date %>
         </time>
         <p class="relative z-10 mt-2 text-sm text-zinc-600 dark:text-zinc-400"><%= String.slice(@summary, 0..300) %></p>
-        <div aria-hidden="true" class="relative z-10 flex items-center mt-4 text-sm font-medium text-teal-500">
+        <div aria-hidden="true" class="relative z-10 flex items-center mt-2 text-sm font-medium text-teal-500">
           <.link href={@route} class="relative z-10">
             Read article
           </.link>

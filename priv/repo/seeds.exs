@@ -61,3 +61,19 @@ When you are starting your project you probably have a design concept or a sketc
     hash_id: :crypto.hash(:sha, markdown) |> Base.encode64()
   })
   |> Repo.insert()
+
+{:ok, _article} =
+  %Article{}
+  |> Article.changeset(%{
+    title: title,
+    author: "Thiago Ramos",
+    slug: "2022-09-14-test-post-2",
+    html_url: "2022-09-14-test-post-2",
+    body: markdown,
+    html_body: html_body,
+    summary: summary,
+    date: "2022-09-10",
+    category_id: posts_category.id,
+    hash_id: :crypto.hash(:sha, "test") |> Base.encode64()
+  })
+  |> Repo.insert()
