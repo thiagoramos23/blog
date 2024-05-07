@@ -8,6 +8,10 @@
     <%= live_title_tag assigns[:page_title] || "Thiago Ramos", suffix: " - Elixir and programming in general" %>
     <meta name="description" content="All of my not so long-form thoughts on programming, career, product design, and some life philosophy, all in chronological order.">
     <meta name="keywords" content="learning, education, tutorial, web development, elixir, phoenix, web framework, mix, programming, career"/>
+    <meta property="og:title" content="Thiago Ramos - Writing about Elixir and Software Development" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://thiagoramos.me" />
+    <meta property="og:image" content="https://cxzchryqsvjyzkxvjmxj.supabase.co/storage/v1/object/public/blog_images/logo_website.png" />
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
     <script>
