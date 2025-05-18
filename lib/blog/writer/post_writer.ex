@@ -17,7 +17,7 @@ defmodule Blog.Writer.PostWriter do
   end
 
   def handle_continue(:get_and_write, state) do
-    # get_posts_and_upsert()
+    get_posts_and_upsert()
     schedule_work()
     {:noreply, state}
   end
@@ -43,6 +43,7 @@ defmodule Blog.Writer.PostWriter do
       on_conflict = [
         set: [
           title: new_article.title,
+          date: new_article.date,
           body: new_article.body,
           html_body: new_article.html_body,
           summary: new_article.summary,
