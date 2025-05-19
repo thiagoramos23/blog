@@ -1,23 +1,31 @@
 <div class="relative w-full mt-5">
   <main>
-    <div class="sm:px-8 mt-8 lg:mt-12">
-      <div class="mx-auto w-full lg:px-8">
+    <div class="mt-8 sm:px-8 lg:mt-12">
+      <div class="w-full mx-auto lg:px-8">
         <div class="relative px-4 sm:px-8 lg:px-12">
-          <div class="mx-auto w-full lg:max-w-5xl">
+          <div class="w-full mx-auto lg:max-w-5xl">
             <div class="xl:relative">
               <div class="mx-auto max-w-max">
                 <.link href={Routes.article_index_path(@socket, :index)}>
-                  <button type="button" aria-label="Go back to articles" class="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20 lg:absolute lg:-left-5 lg:mb-0 lg:-mt-2 xl:-top-1.5 xl:left-0 xl:mt-0">
-                    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="h-4 w-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400"><path d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  <button type="button" aria-label="Go back to articles"
+                    class="group mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 transition dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20 lg:absolute lg:-left-5 lg:mb-0 lg:-mt-2 xl:-top-1.5 xl:left-0 xl:mt-0">
+                    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"
+                      class="w-4 h-4 transition stroke-zinc-500 group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400">
+                      <path d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round"></path>
+                    </svg>
                   </button>
                 </.link>
-                <h1 class="mt-4 text-4xl antialiased font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+                <h1
+                  class="pt-10 mt-4 text-4xl antialiased font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
                   <%= @article.title %>
                 </h1>
-                <span class="mt-2 text-base font-light antialiased italic tracking-wide text-zinc-800 dark:text-zinc-100 sm:text-lg">
+                <span
+                  class="mt-2 text-base antialiased italic font-light tracking-wide text-zinc-800 dark:text-zinc-100 sm:text-lg">
                   <%= @total_read_time %> minutes to read
                 </span>
-                <div class="prose text-gray-900 dark:text-gray-100 font-normal antialiased prose-h1:mt-1 prose-h1:mb-1 prose-h2:mt-10 prose-h3:mt-8 prose-ul:mt-2 prose-li:mb-1 prose-li:mt-1 prose-p:mt-5 prose-p:mb-2 dark:prose-invert">
+                <div
+                  class="antialiased font-normal prose text-gray-900 dark:text-gray-100 prose-h1:mt-1 prose-h1:mb-1 prose-h2:mt-10 prose-h3:mt-8 prose-ul:mt-2 prose-li:mb-1 prose-li:mt-1 prose-p:mt-5 prose-p:mb-2 dark:prose-invert">
                   <%= raw @article.html_body %>
                 </div>
               </div>
