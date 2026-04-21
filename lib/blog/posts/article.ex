@@ -9,6 +9,7 @@ defmodule Blog.Posts.Article do
     field :summary, :string
     field :body, :string
     field :html_body, :string
+    field :source, :string, default: "github"
     field :slug, :string
     field :title, :string
     field :author, :string
@@ -29,7 +30,8 @@ defmodule Blog.Posts.Article do
     :category_id,
     :hash_id,
     :html_url,
-    :author
+    :author,
+    :source
   ]
 
   @valid_fields [:html_body] ++ @required_fields
@@ -39,6 +41,10 @@ defmodule Blog.Posts.Article do
     article
     |> cast(attrs, @valid_fields)
     |> validate_required(@required_fields)
+    |> validate_inclusion(:source, ["github", "admin"])
+    |> unique_constraint(:slug)
+    |> unique_constraint(:hash_id)
+    |> foreign_key_constraint(:category_id)
   end
 
   def new_post(params) do

@@ -20,6 +20,7 @@
 
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
+import Trix from "trix"
 import "../vendor/dark"
 // Establish Phoenix Socket and LiveView configuration.
 import {Socket} from "phoenix"
@@ -42,4 +43,92 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
+window.Trix = Trix
 
+const editorUploadPath = "/admin/uploads/images"
+
+document.addEventListener("change", (event) => {
+  const input = event.target
+
+  if (!(input instanceof HTMLInputElement) || !input.matches("[data-trix-insert-file]")) {
+    return
+  }
+
+  const [file] = input.files || []
+
+  if (!file) {
+    return
+  }
+
+  const editorInputId = input.dataset.trixInsertFile
+  const editorElement = document.querySelector(`trix-editor[input="${editorInputId}"]`)
+
+  if (editorElement?.editor) {
+    editorElement.editor.insertFile(file)
+  }
+
+  input.value = ""
+})
+
+document.addEventListener("trix-file-accept", (event) => {
+  if (!event.file.type.startsWith("image/")) {
+    event.preventDefault()
+  }
+})
+
+document.addEventListener("trix-attachment-add", (event) => {
+  if (!event.attachment.file) {
+    return
+  }
+
+  uploadTrixAttachment(event.attachment)
+})
+
+function uploadTrixAttachment(attachment) {
+  const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute("content")
+  const formData = new FormData()
+  const xhr = new XMLHttpRequest()
+
+  formData.append("file", attachment.file)
+
+  xhr.open("POST", editorUploadPath, true)
+  xhr.responseType = "json"
+
+  if (csrf) {
+    xhr.setRequestHeader("x-csrf-token", csrf)
+  }
+
+  xhr.setRequestHeader("accept", "application/json")
+
+  xhr.upload.addEventListener("progress", (progressEvent) => {
+    if (progressEvent.lengthComputable) {
+      const progress = progressEvent.loaded / progressEvent.total * 100
+      attachment.setUploadProgress(progress)
+    }
+  })
+
+  xhr.addEventListener("load", () => {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      const payload = xhr.response || {}
+
+      if (payload.url) {
+        attachment.setAttributes({
+          url: payload.url,
+          href: payload.url
+        })
+
+        return
+      }
+    }
+
+    attachment.remove()
+    window.alert("Image upload failed. Check your admin credentials and R2 configuration.")
+  })
+
+  xhr.addEventListener("error", () => {
+    attachment.remove()
+    window.alert("Image upload failed. Check your network connection and try again.")
+  })
+
+  xhr.send(formData)
+}

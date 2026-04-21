@@ -63,6 +63,31 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+  r2_account_id = System.get_env("R2_ACCOUNT_ID")
+  r2_access_key_id = System.get_env("R2_ACCESS_KEY_ID")
+  r2_secret_access_key = System.get_env("R2_SECRET_ACCESS_KEY")
+  r2_bucket = System.get_env("R2_BUCKET")
+  r2_public_url = System.get_env("R2_PUBLIC_URL")
+  r2_upload_prefix = System.get_env("R2_UPLOAD_PREFIX") || "posts"
+
+  if r2_account_id && r2_access_key_id && r2_secret_access_key do
+    config :ex_aws,
+      access_key_id: r2_access_key_id,
+      secret_access_key: r2_secret_access_key
+
+    config :ex_aws, :s3,
+      scheme: "https://",
+      host: "#{r2_account_id}.r2.cloudflarestorage.com",
+      region: "auto"
+  end
+
+  if r2_bucket && r2_public_url do
+    config :blog, Blog.Storage.R2,
+      bucket: r2_bucket,
+      public_url: r2_public_url,
+      upload_prefix: r2_upload_prefix
+  end
+
   # ## Configuring the mailer
   #
   # In production you need to configure the mailer to use a different adapter.

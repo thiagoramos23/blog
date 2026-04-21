@@ -5,7 +5,7 @@ defmodule Blog.MixProject do
     [
       app: :blog,
       version: "0.1.0",
-      elixir: "~> 1.12",
+      elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -33,6 +33,9 @@ defmodule Blog.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:igniter, "~> 0.6", only: [:dev, :test]},
+      {:lazy_html, ">= 0.1.0", only: :test},
+      {:bcrypt_elixir, "~> 3.0"},
       {:phoenix, "~> 1.7"},
       {:phoenix_ecto, "~> 4.5"},
       {:ecto_sql, "~> 3.11"},
@@ -42,23 +45,26 @@ defmodule Blog.MixProject do
       {:phoenix_live_view, "~> 1.0"},
       {:phoenix_html_helpers, "~> 1.0"},
       {:phoenix_view, "~> 2.0"},
-      {:floki, ">= 0.36.1", only: :test},
+      {:floki, ">= 0.36.1"},
       {:phoenix_live_dashboard, "~> 0.8"},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:swoosh, "~> 1.16"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:telemetry, "~> 1.2"},
-      {:gettext, "~> 0.24"},
+      {:gettext, "~> 0.26"},
       {:jason, "~> 1.4"},
       {:plug_cowboy, "~> 2.7"},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:timex, "~> 3.7"},
       {:earmark, "~> 1.4"},
-      {:makeup, "~> 1.1.0"},
-      {:makeup_elixir, "~> 0.16.0"},
-      {:req, "~> 0.4.14"},
-      {:atomex, "~> 0.5.1"}
+      {:makeup, "~> 1.2"},
+      {:makeup_elixir, "~> 1.0"},
+      {:req, "~> 0.5"},
+      {:atomex, "~> 0.5.1"},
+      {:ex_aws, "~> 2.5"},
+      {:ex_aws_s3, "~> 2.5"},
+      {:sweet_xml, "~> 0.7"}
     ]
   end
 

@@ -1,0 +1,7 @@
+{
+  "name": "assets",
+  "private": true,
+  "dependencies": {
+    "trix": "^2.1.15"
+  }
+}
