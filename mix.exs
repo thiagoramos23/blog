@@ -34,6 +34,7 @@ defmodule Blog.MixProject do
   defp deps do
     [
       {:igniter, "~> 0.6", only: [:dev, :test]},
+      {:tidewave, "~> 0.5", only: :dev},
       {:lazy_html, ">= 0.1.0", only: :test},
       {:bcrypt_elixir, "~> 3.0"},
       {:phoenix, "~> 1.7"},
