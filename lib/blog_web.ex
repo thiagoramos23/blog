@@ -17,13 +17,19 @@ defmodule BlogWeb do
   and import those modules here.
   """
 
+  def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
+
   def controller do
     quote do
-      use Phoenix.Controller, namespace: BlogWeb
+      use Phoenix.Controller, formats: [html: "View", json: "View"]
+      use Gettext, backend: BlogWeb.Gettext
+
+      plug :put_layout, html: {BlogWeb.LayoutView, :app}
 
       import Plug.Conn
-      import BlogWeb.Gettext
       alias BlogWeb.Router.Helpers, as: Routes
+
+      unquote(verified_routes())
     end
   end
 
@@ -47,6 +53,7 @@ defmodule BlogWeb do
       use Phoenix.LiveView,
         layout: {BlogWeb.LayoutView, :live}
 
+      unquote(verified_routes())
       unquote(view_helpers())
     end
   end
@@ -55,6 +62,7 @@ defmodule BlogWeb do
     quote do
       use Phoenix.LiveComponent
 
+      unquote(verified_routes())
       unquote(view_helpers())
     end
   end
@@ -63,6 +71,7 @@ defmodule BlogWeb do
     quote do
       use Phoenix.Component
 
+      unquote(verified_routes())
       unquote(view_helpers())
     end
   end
@@ -80,7 +89,16 @@ defmodule BlogWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import BlogWeb.Gettext
+      use Gettext, backend: BlogWeb.Gettext
+    end
+  end
+
+  def verified_routes do
+    quote do
+      use Phoenix.VerifiedRoutes,
+        endpoint: BlogWeb.Endpoint,
+        router: BlogWeb.Router,
+        statics: BlogWeb.static_paths()
     end
   end
 
@@ -90,6 +108,7 @@ defmodule BlogWeb do
       import Phoenix.HTML
       import Phoenix.HTML.Form
       use PhoenixHTMLHelpers
+      import BlogWeb.CoreComponents
 
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
       import Phoenix.LiveView.Helpers
@@ -99,8 +118,10 @@ defmodule BlogWeb do
       import Phoenix.View
 
       import BlogWeb.ErrorHelpers
-      import BlogWeb.Gettext
+      use Gettext, backend: BlogWeb.Gettext
       alias BlogWeb.Router.Helpers, as: Routes
+
+      unquote(verified_routes())
     end
   end
 

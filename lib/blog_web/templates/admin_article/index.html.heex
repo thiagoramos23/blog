@@ -1,0 +1,46 @@
+<section class="mx-auto max-w-5xl px-4 py-12">
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-zinc-900">Admin Articles</h1>
+      <p class="mt-2 text-sm text-zinc-600">Create and edit posts directly from the blog admin.</p>
+    </div>
+
+    <a
+      href={Routes.admin_article_path(@conn, :new)}
+      class="rounded-md bg-zinc-900 px-4 py-2 text-sm font-semibold text-white"
+    >
+      New article
+    </a>
+  </div>
+
+  <div class="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
+    <table class="min-w-full divide-y divide-zinc-200 text-sm">
+      <thead class="bg-zinc-50">
+        <tr>
+          <th class="px-4 py-3 text-left font-semibold text-zinc-700">Title</th>
+          <th class="px-4 py-3 text-left font-semibold text-zinc-700">Source</th>
+          <th class="px-4 py-3 text-left font-semibold text-zinc-700">Updated</th>
+          <th class="px-4 py-3 text-right font-semibold text-zinc-700">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-zinc-100">
+        <tr :for={article <- @articles}>
+          <td class="px-4 py-3">
+            <div class="font-semibold text-zinc-900"><%= article.title %></div>
+            <div class="text-xs text-zinc-500">/<%= article.slug %></div>
+          </td>
+          <td class="px-4 py-3 capitalize text-zinc-600"><%= article.source %></td>
+          <td class="px-4 py-3 text-zinc-600"><%= article.updated_at %></td>
+          <td class="px-4 py-3 text-right">
+            <a
+              href={Routes.admin_article_path(@conn, :edit, article)}
+              class="font-semibold text-zinc-900 underline"
+            >
+              Edit
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

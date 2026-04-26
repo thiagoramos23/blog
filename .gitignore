@@ -32,3 +32,12 @@ blog-*.tar
 npm-debug.log
 /assets/node_modules/
 
+.dual-graph/
+.dual-graph-context/
+.kamal/secrets
+.kamal/secrets.*
+!.kamal/secrets.example
+.kamal/hooks/*.sample
+.dexter.*
+bin/
+.playwright-cli/

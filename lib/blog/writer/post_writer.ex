@@ -37,21 +37,31 @@ defmodule Blog.Writer.PostWriter do
     Process.send_after(self(), :scheduled_work, 4 * 60 * 60 * 1000)
   end
 
-  defp upsert_articles(new_articles) do
+  def upsert_articles(new_articles) do
     new_articles
-    |> Enum.map(fn new_article ->
-      on_conflict = [
-        set: [
-          title: new_article.title,
-          date: new_article.date,
-          body: new_article.body,
-          html_body: new_article.html_body,
-          summary: new_article.summary,
-          hash_id: new_article.hash_id
-        ]
-      ]
+    |> Enum.flat_map(fn new_article ->
+      case Repo.get_by(Article, slug: new_article.slug) do
+        %Article{source: "admin"} ->
+          []
 
-      Repo.insert(new_article, on_conflict: on_conflict, conflict_target: :slug)
+        _article ->
+          on_conflict = [
+            set: [
+              title: new_article.title,
+              date: new_article.date,
+              body: new_article.body,
+              html_body: new_article.html_body,
+              summary: new_article.summary,
+              hash_id: new_article.hash_id,
+              html_url: new_article.html_url,
+              author: new_article.author,
+              category_id: new_article.category_id,
+              source: new_article.source
+            ]
+          ]
+
+          [Repo.insert(new_article, on_conflict: on_conflict, conflict_target: :slug)]
+      end
     end)
   end
 
@@ -90,6 +100,7 @@ defmodule Blog.Writer.PostWriter do
         hash_id: hash_id,
         date: Date.from_iso8601!(metadata.date),
         category_id: post_category.id,
+        source: "github",
         slug: name |> String.split(".") |> hd()
       })
 

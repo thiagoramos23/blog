@@ -1,3 +1,6 @@
+<% about_active = assigns[:about_active] || false %>
+<% current_admin = assigns[:current_admin] %>
+
 <main>
   <div id="__next">
     <div class="fixed inset-0 flex justify-center sm:px-8">
@@ -10,7 +13,7 @@
         <ul
           class="flex px-3 text-sm font-medium rounded-full shadow-lg bg-white/90 text-zinc-800 shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10">
           <li>
-            <%= if @about_active do %>
+            <%= if about_active do %>
               <a class="relative block px-3 py-2 text-teal-400 transition hover:text-teal-500 dark:text-teal-400 dark:hover:text-teal-400"
                 href="/about">
                 <span
@@ -27,7 +30,7 @@
                 <% end%>
           </li>
           <li>
-            <%= if @about_active do %>
+            <%= if about_active do %>
               <a class="relative block px-3 py-2 text-gray-500 transition hover:text-gray-600 dark:hover:text-gray-400 dark:text-gray-300"
                 href="/">Articles
                 <span
@@ -43,7 +46,44 @@
         </ul>
       </BlogWeb.Components.Header.header>
 
+      <%= if current_admin do %>
+        <div class="relative px-4 pt-4 sm:px-8 lg:px-12">
+          <div class="mx-auto flex max-w-5xl items-center justify-end gap-4 text-sm text-zinc-600 dark:text-zinc-300">
+            <span class="truncate font-medium"><%= current_admin.email %></span>
+            <a class="transition hover:text-teal-500 dark:hover:text-teal-400" href={~p"/admin/articles"}>
+              Admin
+            </a>
+            <a class="transition hover:text-teal-500 dark:hover:text-teal-400" href={~p"/admin/admins/settings"}>
+              Settings
+            </a>
+            <%= link("Log out",
+              to: ~p"/admin/admins/log_out",
+              method: :delete,
+              class: "transition hover:text-teal-500 dark:hover:text-teal-400"
+            ) %>
+          </div>
+        </div>
+      <% end %>
+
       <main>
+        <div class="relative px-4 sm:px-8 lg:px-12">
+          <div class="mx-auto max-w-5xl pt-4">
+            <p
+              :if={Phoenix.Flash.get(@flash, :info)}
+              class="rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900"
+              role="status"
+            >
+              <%= Phoenix.Flash.get(@flash, :info) %>
+            </p>
+            <p
+              :if={Phoenix.Flash.get(@flash, :error)}
+              class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900"
+              role="alert"
+            >
+              <%= Phoenix.Flash.get(@flash, :error) %>
+            </p>
+          </div>
+        </div>
         <%= @inner_content %>
       </main>
       <BlogWeb.Components.Footer.footer />

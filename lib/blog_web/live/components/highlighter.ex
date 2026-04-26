@@ -8,8 +8,6 @@ defmodule Highlighter do
   Highlights all code block in an already generated HTML document.
   """
   def highlight(html) do
-    IO.inspect(html, label: "HTML")
-
     Regex.replace(
       ~r/<pre><code(?:\s+class="(\w*)")?>([^<]*)<\/code><\/pre>/,
       html,

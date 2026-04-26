@@ -46,6 +46,17 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :blog, :default_post_author, "Thiago Ramos"
+config :blog, :storage_adapter, Blog.Storage.R2
+
+config :blog, Blog.Storage.R2,
+  bucket: System.get_env("R2_BUCKET"),
+  public_url: System.get_env("R2_PUBLIC_URL"),
+  upload_prefix: "posts"
+
+config :ex_aws,
+  json_codec: Jason
+
 config :tailwind,
   version: "3.1.8",
   default: [

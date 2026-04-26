@@ -30,8 +30,13 @@ defmodule BlogWeb.ArticleLive.Show do
     %{article | html_body: Highlighter.highlight(article.html_body)}
   end
 
-  defp get_total_read_time(%{body: body}) do
-    total_words = body |> String.split(" ") |> Enum.count()
+  defp get_total_read_time(%{html_body: html_body}) do
+    total_words =
+      html_body
+      |> Posts.plain_text_from_html()
+      |> String.split(~r/\s+/, trim: true)
+      |> Enum.count()
+
     div(total_words, 300)
   end
 
