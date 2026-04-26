@@ -50,6 +50,7 @@ window.Trix = Trix
 
 const editorUploadPath = "/admin/uploads/images"
 const minImageAttachmentWidth = 160
+const pendingImageAttachmentWidthApplies = new WeakMap()
 
 document.addEventListener("change", (event) => {
   const input = event.target
@@ -81,6 +82,8 @@ document.addEventListener("trix-file-accept", (event) => {
 })
 
 document.addEventListener("trix-attachment-add", (event) => {
+  scheduleApplyStoredImageAttachmentWidths(event.target)
+
   const file = attachmentFile(event.attachment)
 
   if (!file) {
@@ -102,7 +105,11 @@ document.addEventListener("trix-attachment-before-toolbar", (event) => {
 })
 
 document.addEventListener("trix-attachment-edit", (event) => {
-  requestAnimationFrame(() => applyStoredImageAttachmentWidths(event.target))
+  scheduleApplyStoredImageAttachmentWidths(event.target)
+})
+
+document.addEventListener("trix-selection-change", (event) => {
+  scheduleApplyStoredImageAttachmentWidths(event.target)
 })
 
 document.addEventListener("trix-initialize", (event) => {
@@ -194,7 +201,7 @@ function startImageResize(event, figure, attachment) {
     const dragDistance = startsFromLeft ? startX - moveEvent.clientX : moveEvent.clientX - startX
     nextWidth = clamp(Math.round(startWidth + dragDistance), minImageAttachmentWidth, maxWidth)
 
-    syncRenderedImageSize(figure, nextWidth)
+    syncRenderedImageSize(figure, nextWidth, {syncAttachmentData: false})
 
     if (readout) {
       readout.textContent = `${nextWidth}px`
@@ -217,40 +224,73 @@ function startImageResize(event, figure, attachment) {
 
 function persistImageAttachmentSize(figure, attachment, width) {
   const editorElement = figure.closest("trix-editor")
-  const editor = editorElement?.editor
   const trixAttachment = attachment.attachment || attachment
   const height = proportionalImageAttachmentHeight(figure, attachment, width)
+  const attributes = compactObject({width, height})
 
-  if (editor && typeof editor.updateAttributesForAttachment === "function") {
-    editor.updateAttributesForAttachment({width, height}, trixAttachment)
-
-    requestAnimationFrame(() => applyStoredImageAttachmentWidths(editorElement))
+  if (trixAttachment && typeof trixAttachment.setAttributes === "function") {
+    trixAttachment.setAttributes(attributes)
+    scheduleApplyStoredImageAttachmentWidths(editorElement)
     return
   }
 
-  attachment.setAttributes({
-    width,
-    height
-  })
+  attachment.setAttributes(attributes)
 }
 
-function syncRenderedImageSize(figure, width) {
+function syncRenderedImageSize(figure, width, options = {}) {
+  const {syncAttachmentData = true} = options
   const image = figure?.querySelector("img")
-  const height = storedImageAttachmentHeight(figure) || proportionalImageAttachmentHeight(figure, null, width)
+  const height = proportionalImageAttachmentHeight(figure, null, width) || storedImageAttachmentHeight(figure)
 
   if (image) {
-    image.setAttribute("width", String(width))
+    const serializedWidth = String(width)
+
+    if (image.getAttribute("width") !== serializedWidth) {
+      image.setAttribute("width", serializedWidth)
+    }
 
     if (height) {
-      image.setAttribute("height", String(height))
+      const serializedHeight = String(height)
+
+      if (image.getAttribute("height") !== serializedHeight) {
+        image.setAttribute("height", serializedHeight)
+      }
     }
   }
 
-  if (figure) {
-    figure.style.maxWidth = `${width}px`
+  if (syncAttachmentData) {
+    syncRenderedAttachmentData(figure, width, height)
+  }
+}
+
+function scheduleApplyStoredImageAttachmentWidths(root = document) {
+  if (!root || pendingImageAttachmentWidthApplies.has(root)) {
+    return
   }
 
-  syncRenderedAttachmentData(figure, width, height)
+  const pending = {}
+  const run = () => {
+    const currentPending = pendingImageAttachmentWidthApplies.get(root)
+
+    if (currentPending !== pending) {
+      return
+    }
+
+    if (pending.frame) {
+      cancelAnimationFrame(pending.frame)
+    }
+
+    if (pending.timeout) {
+      clearTimeout(pending.timeout)
+    }
+
+    pendingImageAttachmentWidthApplies.delete(root)
+    applyStoredImageAttachmentWidths(root)
+  }
+
+  pending.frame = requestAnimationFrame(run)
+  pending.timeout = setTimeout(run, 50)
+  pendingImageAttachmentWidthApplies.set(root, pending)
 }
 
 function syncRenderedAttachmentData(figure, width, height) {
@@ -321,17 +361,43 @@ function observeImageAttachmentWidths(root = document) {
 
     container.dataset.trixImageWidthObserver = "true"
 
-    const observer = new MutationObserver(() => {
-      requestAnimationFrame(() => applyStoredImageAttachmentWidths(container))
+    const observer = new MutationObserver((mutations) => {
+      if (mutations.some(mutationTouchesImageAttachment)) {
+        scheduleApplyStoredImageAttachmentWidths(container)
+      }
     })
 
     observer.observe(container, {
       attributes: true,
-      attributeFilter: ["data-trix-attachment"],
+      attributeFilter: ["data-trix-attachment", "height", "width"],
       childList: true,
       subtree: true
     })
   })
+}
+
+function mutationTouchesImageAttachment(mutation) {
+  if (mutation.type === "attributes") {
+    return elementIsOrContainsImageAttachment(mutation.target)
+  }
+
+  return Array.from(mutation.addedNodes).some(elementIsOrContainsImageAttachment) ||
+    Array.from(mutation.removedNodes).some(elementIsOrContainsImageAttachment)
+}
+
+function elementIsOrContainsImageAttachment(node) {
+  if (!(node instanceof Element)) {
+    return false
+  }
+
+  if (node.matches(".attachment[data-trix-attachment]")) {
+    return true
+  }
+
+  return Boolean(
+    node.closest?.(".attachment[data-trix-attachment]") ||
+    node.querySelector?.(".attachment[data-trix-attachment]")
+  )
 }
 
 function proportionalImageAttachmentHeight(figure, attachment, width) {
@@ -380,6 +446,12 @@ function maxImageAttachmentWidth(figure) {
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max)
+}
+
+function compactObject(object) {
+  return Object.fromEntries(
+    Object.entries(object).filter(([, value]) => value != null)
+  )
 }
 
 function uploadTrixAttachment(attachment, file) {

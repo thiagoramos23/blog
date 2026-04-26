@@ -334,8 +334,14 @@ trix-editor:focus {
 .trix-content .attachment,
 trix-editor .attachment {
   position: relative;
-  width: 100%;
+  width: fit-content;
+  max-width: 100%;
   margin: 1.5rem 0;
+}
+
+.trix-content .attachment.attachment--preview,
+trix-editor .attachment.attachment--preview {
+  width: fit-content;
 }
 
 .trix-content .attachment[data-trix-attachment*='"width":320'],
@@ -361,7 +367,8 @@ trix-editor .attachment:has(img[width="760"]) {
 
 .trix-content .attachment img,
 trix-editor .attachment img {
-  width: 100%;
+  display: block;
+  max-width: 100%;
   height: auto;
   border-radius: 1rem;
 }
