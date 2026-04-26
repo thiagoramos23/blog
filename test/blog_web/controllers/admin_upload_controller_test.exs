@@ -1,12 +1,6 @@
 defmodule BlogWeb.AdminUploadControllerTest do
   use BlogWeb.ConnCase, async: true
 
-  setup do
-    Application.put_env(:blog, :storage_adapter, Blog.Storage.Test)
-    on_exit(fn -> Application.delete_env(:blog, :storage_adapter) end)
-    :ok
-  end
-
   setup :register_and_log_in_admin
 
   test "authenticated admin can upload an editor image", %{conn: conn} do

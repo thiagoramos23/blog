@@ -333,13 +333,122 @@ trix-editor:focus {
 
 .trix-content .attachment,
 trix-editor .attachment {
+  position: relative;
+  width: 100%;
   margin: 1.5rem 0;
+}
+
+.trix-content .attachment[data-trix-attachment*='"width":320'],
+trix-editor .attachment[data-trix-attachment*='"width":320'],
+.trix-content .attachment:has(img[width="320"]),
+trix-editor .attachment:has(img[width="320"]) {
+  max-width: 20rem;
+}
+
+.trix-content .attachment[data-trix-attachment*='"width":560'],
+trix-editor .attachment[data-trix-attachment*='"width":560'],
+.trix-content .attachment:has(img[width="560"]),
+trix-editor .attachment:has(img[width="560"]) {
+  max-width: 35rem;
+}
+
+.trix-content .attachment[data-trix-attachment*='"width":760'],
+trix-editor .attachment[data-trix-attachment*='"width":760'],
+.trix-content .attachment:has(img[width="760"]),
+trix-editor .attachment:has(img[width="760"]) {
+  max-width: 47.5rem;
 }
 
 .trix-content .attachment img,
 trix-editor .attachment img {
   width: 100%;
+  height: auto;
   border-radius: 1rem;
+}
+
+trix-editor .trix-image-resize-controls {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border: 1px solid #18181b;
+  border-radius: 1rem;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+trix-editor .attachment:hover .trix-image-resize-controls,
+trix-editor .attachment.trix-image-resizing .trix-image-resize-controls {
+  opacity: 1;
+}
+
+trix-editor .trix-image-resize-readout {
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.1875rem 0.5rem;
+  border-radius: 999px;
+  background: rgb(24 24 27 / 0.88);
+  color: #ffffff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+}
+
+trix-editor .trix-image-resize-handle {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  background: #18181b;
+  box-shadow: 0 1px 3px rgb(15 23 42 / 0.24);
+  pointer-events: auto;
+  touch-action: none;
+}
+
+trix-editor .trix-image-resize-handle--left {
+  top: 50%;
+  left: 0;
+  transform: translate(-50%, -50%);
+  cursor: ew-resize;
+}
+
+trix-editor .trix-image-resize-handle--right {
+  top: 50%;
+  right: 0;
+  transform: translate(50%, -50%);
+  cursor: ew-resize;
+}
+
+trix-editor .trix-image-resize-handle--top-left {
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  cursor: nwse-resize;
+}
+
+trix-editor .trix-image-resize-handle--top-right {
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  cursor: nesw-resize;
+}
+
+trix-editor .trix-image-resize-handle--bottom-left {
+  bottom: 0;
+  left: 0;
+  transform: translate(-50%, 50%);
+  cursor: nesw-resize;
+}
+
+trix-editor .trix-image-resize-handle--bottom-right {
+  right: 0;
+  bottom: 0;
+  transform: translate(50%, 50%);
+  cursor: nwse-resize;
 }
 
 .trix-content .attachment__caption,
