@@ -6,13 +6,7 @@ defmodule BlogWeb.Admin.AdminLoginLive do
     <div class="mx-auto max-w-sm">
       <.header class="text-center">
         Log in to account
-        <:subtitle>
-          Don't have an account?
-          <.link navigate={~p"/admin/admins/register"} class="font-semibold text-brand hover:underline">
-            Register
-          </.link>
-          for an account now.
-        </:subtitle>
+        <:subtitle>Use your admin credentials to continue.</:subtitle>
       </.header>
 
       <.simple_form for={@form} id="login_form" action={~p"/admin/admins/log_in"} phx-update="ignore">

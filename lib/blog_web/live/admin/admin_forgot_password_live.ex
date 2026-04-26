@@ -20,8 +20,7 @@ defmodule BlogWeb.Admin.AdminForgotPasswordLive do
         </:actions>
       </.simple_form>
       <p class="text-center text-sm mt-4">
-        <.link href={~p"/admin/admins/register"}>Register</.link>
-        | <.link href={~p"/admin/admins/log_in"}>Log in</.link>
+        <.link href={~p"/admin/admins/log_in"}>Log in</.link>
       </p>
     </div>
     """

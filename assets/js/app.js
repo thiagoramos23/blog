@@ -77,19 +77,29 @@ document.addEventListener("trix-file-accept", (event) => {
 })
 
 document.addEventListener("trix-attachment-add", (event) => {
-  if (!event.attachment.file) {
+  const file = attachmentFile(event.attachment)
+
+  if (!file) {
     return
   }
 
-  uploadTrixAttachment(event.attachment)
+  uploadTrixAttachment(event.attachment, file)
 })
 
-function uploadTrixAttachment(attachment) {
+function attachmentFile(attachment) {
+  if (typeof attachment.getFile === "function") {
+    return attachment.getFile()
+  }
+
+  return attachment.file
+}
+
+function uploadTrixAttachment(attachment, file) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute("content")
   const formData = new FormData()
   const xhr = new XMLHttpRequest()
 
-  formData.append("file", attachment.file)
+  formData.append("file", file)
 
   xhr.open("POST", editorUploadPath, true)
   xhr.responseType = "json"

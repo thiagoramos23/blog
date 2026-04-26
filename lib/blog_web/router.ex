@@ -14,6 +14,15 @@ defmodule BlogWeb.Router do
     plug :fetch_current_admin
   end
 
+  pipeline :admin_upload do
+    plug :accepts, ["json"]
+    plug :fetch_session
+    plug :instrospect
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+    plug :fetch_current_admin
+  end
+
   alias Blog.Metric.StatsServer
 
   def instrospect(conn, _) do
@@ -41,6 +50,10 @@ defmodule BlogWeb.Router do
   end
 
   scope "/", BlogWeb do
+    get "/up", HealthController, :show
+  end
+
+  scope "/", BlogWeb do
     pipe_through :browser
 
     live_session :blog_current_admin,
@@ -62,6 +75,11 @@ defmodule BlogWeb.Router do
     post "/articles", AdminArticleController, :create
     get "/articles/:id/edit", AdminArticleController, :edit
     put "/articles/:id", AdminArticleController, :update
+  end
+
+  scope "/admin", BlogWeb do
+    pipe_through [:admin_upload, :admin_require_authenticated]
+
     post "/uploads/images", AdminUploadController, :create
   end
 
@@ -107,7 +125,6 @@ defmodule BlogWeb.Router do
     live_session :redirect_if_admin_is_authenticated,
       layout: {BlogWeb.LayoutView, :auth_live},
       on_mount: [{BlogWeb.Admin.AdminAuth, :redirect_if_admin_is_authenticated}] do
-      live "/admins/register", AdminRegistrationLive, :new
       live "/admins/log_in", AdminLoginLive, :new
       live "/admins/reset_password", AdminForgotPasswordLive, :new
       live "/admins/reset_password/:token", AdminResetPasswordLive, :edit

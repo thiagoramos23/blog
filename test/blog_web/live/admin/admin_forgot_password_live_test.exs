@@ -12,7 +12,6 @@ defmodule BlogWeb.Admin.AdminForgotPasswordLiveTest do
       {:ok, lv, html} = live(conn, ~p"/admin/admins/reset_password")
 
       assert html =~ "Forgot your password?"
-      assert has_element?(lv, ~s|a[href="#{~p"/admin/admins/register"}"]|, "Register")
       assert has_element?(lv, ~s|a[href="#{~p"/admin/admins/log_in"}"]|, "Log in")
     end
 

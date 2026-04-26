@@ -18,6 +18,7 @@ defmodule BlogWeb.AdminUploadControllerTest do
 
     conn =
       conn
+      |> put_req_header("accept", "application/json")
       |> post("/admin/uploads/images", %{"file" => upload})
 
     assert %{"url" => url} = json_response(conn, 201)
@@ -33,6 +34,7 @@ defmodule BlogWeb.AdminUploadControllerTest do
 
     conn =
       conn
+      |> put_req_header("accept", "application/json")
       |> post("/admin/uploads/images", %{"file" => upload})
 
     assert %{"error" => "invalid_file_type"} = json_response(conn, 422)

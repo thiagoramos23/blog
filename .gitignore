@@ -34,3 +34,10 @@ npm-debug.log
 
 .dual-graph/
 .dual-graph-context/
+.kamal/secrets
+.kamal/secrets.*
+!.kamal/secrets.example
+.kamal/hooks/*.sample
+.dexter.*
+bin/
+.playwright-cli/

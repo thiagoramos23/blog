@@ -99,20 +99,5 @@ defmodule BlogWeb.Admin.AdminResetPasswordLiveTest do
 
       assert conn.resp_body =~ "Log in"
     end
-
-    test "redirects to registration page when the Register button is clicked", %{
-      conn: conn,
-      token: token
-    } do
-      {:ok, lv, _html} = live(conn, ~p"/admin/admins/reset_password/#{token}")
-
-      {:ok, conn} =
-        lv
-        |> element(~s|a[href="#{~p"/admin/admins/register"}"]|)
-        |> render_click()
-        |> follow_redirect(conn, ~p"/admin/admins/register")
-
-      assert conn.resp_body =~ "Register"
-    end
   end
 end

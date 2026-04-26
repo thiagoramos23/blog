@@ -122,7 +122,12 @@ defmodule Blog.Posts do
 
   defp admin_article_attrs(attrs, article \\ nil) do
     title = attr(attrs, :title, article && article.title)
-    body_html = normalize_html(attr(attrs, :body_html, article && article.html_body))
+
+    body_html =
+      attrs
+      |> attr(:body_html, attr(attrs, :html_body, article && article.html_body))
+      |> normalize_html()
+
     body = plain_text_from_html(body_html)
     slug = slug_from(attr(attrs, :slug, article && article.slug), title)
     summary = summary_from(attr(attrs, :summary, article && article.summary), body)

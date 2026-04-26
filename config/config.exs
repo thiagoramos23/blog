@@ -50,8 +50,8 @@ config :blog, :default_post_author, "Thiago Ramos"
 config :blog, :storage_adapter, Blog.Storage.R2
 
 config :blog, Blog.Storage.R2,
-  bucket: nil,
-  public_url: nil,
+  bucket: System.get_env("R2_BUCKET"),
+  public_url: System.get_env("R2_PUBLIC_URL"),
   upload_prefix: "posts"
 
 config :ex_aws,

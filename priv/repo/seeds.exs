@@ -11,7 +11,14 @@
 # and so on) as they will fail if something goes wrong.
 
 alias Blog.Posts.{Article, Category}
+alias Blog.Backoffice.Admin
 alias Blog.Repo
+
+{:ok, _admin} =
+  %Admin{}
+  |> Admin.registration_changeset(%{email: "admin@example.com", password: "adminpassword123"})
+  |> Admin.confirm_changeset()
+  |> Repo.insert()
 
 file_string =
   "priv/posts/post.html.md"

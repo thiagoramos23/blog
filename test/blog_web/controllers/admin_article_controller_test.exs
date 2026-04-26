@@ -26,7 +26,7 @@ defmodule BlogWeb.AdminArticleControllerTest do
             "summary" => "Post summary",
             "author" => "Thiago Ramos",
             "date" => "2026-03-24",
-            "body_html" => "<p>Hello from admin</p>"
+            "html_body" => "<p>Hello from admin</p>"
           }
         })
 
@@ -50,7 +50,7 @@ defmodule BlogWeb.AdminArticleControllerTest do
             "summary" => "Updated summary",
             "author" => "Thiago Ramos",
             "date" => "2026-03-25",
-            "body_html" => "<p>Updated from admin</p>"
+            "html_body" => "<p>Updated from admin</p>"
           }
         })
 

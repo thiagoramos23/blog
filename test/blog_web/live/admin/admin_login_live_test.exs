@@ -9,7 +9,7 @@ defmodule BlogWeb.Admin.AdminLoginLiveTest do
       {:ok, lv, html} = live(conn, ~p"/admin/admins/log_in")
 
       assert html =~ "Log in"
-      assert html =~ "Register"
+      assert html =~ "Use your admin credentials to continue."
       assert html =~ "Forgot your password?"
       assert has_element?(lv, "#auth-shell")
       refute has_element?(lv, "nav a", "About")
@@ -64,18 +64,6 @@ defmodule BlogWeb.Admin.AdminLoginLiveTest do
   end
 
   describe "login navigation" do
-    test "redirects to registration page when the Register button is clicked", %{conn: conn} do
-      {:ok, lv, _html} = live(conn, ~p"/admin/admins/log_in")
-
-      {:ok, _login_live, login_html} =
-        lv
-        |> element(~s|a[href="#{~p"/admin/admins/register"}"]|)
-        |> render_click()
-        |> follow_redirect(conn, ~p"/admin/admins/register")
-
-      assert login_html =~ "Register"
-    end
-
     test "redirects to forgot password page when the Forgot Password button is clicked", %{
       conn: conn
     } do
