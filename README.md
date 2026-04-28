@@ -27,6 +27,7 @@ Before the first deploy:
   * Set `KAMAL_APP_HOST` to your production hostname, or replace the placeholder in `config/deploy.yml`.
   * Review the server IP and Docker Hub username defaults in `config/deploy.yml`.
   * Review the local `.kamal/secrets` file, which is seeded from [.kamal/secrets.example](/Users/dev/dev/projects/personal/blog-phoenix/.kamal/secrets.example).
+  * Generate `SECRET_KEY_BASE` once with `mix phx.gen.secret` and paste the value into `.kamal/secrets`.
 
 Useful commands:
 

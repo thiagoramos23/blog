@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+image="${KAMAL_IMAGE:-ghcr.io/basecamp/kamal:latest}"
+
+docker_args=(
+  run
+  --rm
+  -v "${PWD}:/workdir"
+  -v /var/run/docker.sock:/var/run/docker.sock
+  -w /workdir
+)
+
+if [[ -t 0 && -t 1 ]]; then
+  docker_args+=(-it)
+fi
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  docker_args+=(
+    -v /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
+    -e SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
+  )
+else
+  : "${SSH_AUTH_SOCK:?SSH_AUTH_SOCK must be set}"
+  docker_args+=(
+    -v "${SSH_AUTH_SOCK}:/ssh-agent"
+    -e SSH_AUTH_SOCK=/ssh-agent
+  )
+fi
+
+if [[ -f "${HOME}/.ssh/known_hosts" ]]; then
+  docker_args+=(-v "${HOME}/.ssh/known_hosts:/root/.ssh/known_hosts:ro")
+fi
+
+exec docker "${docker_args[@]}" "$image" "$@"

@@ -1,7 +1,5 @@
-# flyctl launch added from .elixir_ls/.gitignore
 .elixir_ls/**/*
 
-# flyctl launch added from .gitignore
 # The directory Mix will write compiled artifacts to.
 _build
 
@@ -37,11 +35,8 @@ priv/static/cache_manifest.json
 assets/node_modules
 
 
-# flyctl launch added from deps/makeup/.elixir_ls/.gitignore
 deps/makeup/.elixir_ls/**/*
 
-# flyctl launch added from deps/phoenix_html/.elixir_ls/.gitignore
 deps/phoenix_html/.elixir_ls/**/*
 
-# flyctl launch added from deps/phoenix_live_view/.elixir_ls/.gitignore
 deps/phoenix_live_view/.elixir_ls/**/*

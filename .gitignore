@@ -39,5 +39,7 @@ npm-debug.log
 !.kamal/secrets.example
 .kamal/hooks/*.sample
 .dexter.*
-bin/
+/bin/*
+!/bin/
+!/bin/kamal
 .playwright-cli/

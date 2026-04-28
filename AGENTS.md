@@ -20,8 +20,8 @@
   - Database schema history.
 - `priv/repo/seeds.exs`
   - Seed data for local setup.
-- `.github/workflows/fly-deploy.yml`
-  - Deploys `main` to Fly.io.
+- `config/deploy.yml`
+  - Kamal deployment configuration for the Hetzner host.
 
 ## Current Content Flow
 
