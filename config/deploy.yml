@@ -38,6 +38,8 @@ registry:
 builder:
   arch: amd64
   remote: ssh://root@178.104.212.36
+  provenance: false
+  sbom: false
   # Pass in additional build args needed for your Dockerfile.
   # args:
   #   RUBY_VERSION: <%= ENV["RBENV_VERSION"] || ENV["rvm_ruby_string"] || "#{RUBY_ENGINE}-#{RUBY_ENGINE_VERSION}" %>
