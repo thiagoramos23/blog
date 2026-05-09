@@ -14,15 +14,24 @@
 ARG ELIXIR_VERSION=1.18.2
 ARG OTP_VERSION=27.2
 ARG DEBIAN_VERSION=bullseye-20250113-slim
+ARG NODE_VERSION=22
 
 ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
 ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
+ARG NODE_IMAGE="node:${NODE_VERSION}-bullseye-slim"
 
-FROM ${BUILDER_IMAGE} as builder
+FROM ${NODE_IMAGE} AS node
+
+FROM ${BUILDER_IMAGE} AS builder
 
 # install build dependencies
 RUN apt-get update -y && apt-get install -y build-essential git \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
+
+COPY --from=node /usr/local/bin/node /usr/local/bin/
+COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
+RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
+    ln -s /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
 
 # prepare build dir
 WORKDIR /app
@@ -51,6 +60,9 @@ COPY lib lib
 
 COPY assets assets
 
+# install frontend dependencies
+RUN npm ci --prefix assets --omit=dev
+
 # compile assets
 RUN mix assets.deploy
 
@@ -74,9 +86,9 @@ RUN apt-get update -y && \
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 
 WORKDIR "/app"
 RUN chown nobody /app

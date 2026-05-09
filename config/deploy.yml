@@ -1,64 +1,72 @@
-<% app_host = ENV.fetch("KAMAL_APP_HOST", "blog.example.com") %>
-<% server_ip = ENV.fetch("KAMAL_SERVER_IP", "195.201.102.131") %>
-<% registry_user = ENV.fetch("KAMAL_REGISTRY_USERNAME", "thiagoramos23") %>
-
+# Name of your application. Used to uniquely configure containers.
 service: blog
-image: <%= "#{registry_user}/blog" %>
 
+# Name of the container image.
+image: thiagoramos23/blog
+
+# Deploy to these servers.
 servers:
   web:
-    - <%= server_ip %>
+    - 178.104.212.36
+  #
+  # job:
+  #   hosts:
+  #     - 192.168.0.1
+  #   cmd: bin/jobs
+  #
 
+# Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
+# Remove this section when using multiple web servers and ensure you terminate SSL at your load balancer.
+#
+# Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
   ssl: true
-  host: <%= app_host %>
+  host: thiagoramos.me
+  # Proxy connects to your container on port 80 by default.
   app_port: 4000
-  forward_headers: true
-  healthcheck:
-    path: /up
-    interval: 3
-    timeout: 5
 
+# Credentials for your image host.
 registry:
-  username: <%= registry_user %>
+  # Specify the registry server, if you're not using Docker Hub
+  # server: registry.digitalocean.com / ghcr.io / ...
+  username: thiagoramos23
+  # Always use an access token rather than real password (pulled from .kamal/secrets).
   password:
     - KAMAL_REGISTRY_PASSWORD
 
+# Configure builder setup.
 builder:
   arch: amd64
-  remote: <%= "ssh://root@#{server_ip}" %>
+  remote: ssh://root@178.104.212.36
+  # Pass in additional build args needed for your Dockerfile.
+  # args:
+  #   RUBY_VERSION: <%= ENV["RBENV_VERSION"] || ENV["rvm_ruby_string"] || "#{RUBY_ENGINE}-#{RUBY_ENGINE_VERSION}" %>
 
-deploy_timeout: 30
-drain_timeout: 30
-
+# Inject ENV variables into containers (secrets come from .kamal/secrets).
+#
 env:
   clear:
     PORT: 4000
     MIX_ENV: prod
-    PHX_HOST: <%= app_host %>
+    PHX_HOST: thiagoramos.me
     PHX_SERVER: "true"
-    POOL_SIZE: 10
   secret:
     - DATABASE_URL
     - SECRET_KEY_BASE
-    - GITHUB_TOKEN
-    - R2_ACCOUNT_ID
-    - R2_ACCESS_KEY_ID
-    - R2_SECRET_ACCESS_KEY
-    - R2_BUCKET
-    - R2_PUBLIC_URL
-    - R2_UPLOAD_PREFIX
-
+    - RELEASE_NODE
+# Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
+# "bin/kamal app logs -r job" will tail logs from the first server in the job section.
+#
 aliases:
-  migrate: app exec -p --reuse "/app/bin/migrate"
-  console: app exec -i --reuse "/app/bin/blog remote"
-  shell: app exec -i --reuse "bash"
+  console: app exec --interactive "/app/bin/blog start_iex"
+  shell: app exec --interactive "/bin/bash"
   logs: app logs -f
 
 accessories:
   db:
-    image: postgres:17
-    host: <%= server_ip %>
+    image: postgres:18.3
+    host: 178.104.212.36
+    port: 5432
     env:
       clear:
         POSTGRES_USER: "postgres"
