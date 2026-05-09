@@ -63,7 +63,7 @@ aliases:
 
 accessories:
   db:
-    image: postgres:18.3
+    image: postgres:17
     host: 178.104.212.36
     port: 5432
     env:
