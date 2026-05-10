@@ -105,5 +105,6 @@ USER nobody
 # advised to add an init process such as tini via `apt-get install`
 # above and adding an entrypoint. See https://github.com/krallin/tini for details
 # ENTRYPOINT ["/tini", "--"]
+ENTRYPOINT ["/app/bin/docker-entrypoint"]
 
 CMD ["/app/bin/server"]
