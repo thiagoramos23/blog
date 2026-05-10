@@ -25,8 +25,10 @@ defmodule BlogWeb.Router do
 
   alias Blog.Metric.StatsServer
 
+  @record_metrics Mix.env() != :test
+
   def instrospect(conn, _) do
-    if Mix.env() != :test do
+    if @record_metrics do
       StatsServer.record_metric(%{
         request_path: conn.request_path,
         method: conn.method,
