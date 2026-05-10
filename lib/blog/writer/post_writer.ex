@@ -1,12 +1,15 @@
 defmodule Blog.Writer.PostWriter do
   use GenServer
 
+  import Ecto.Query
+
   alias Blog.Posts
   alias Blog.Posts.Article
   alias Blog.Repo
 
   @url "https://api.github.com/repos/thiagoramos23/second-brain/contents/second_brain/Projects/guides"
   @branch "main"
+  @poll_interval_ms 60 * 60 * 1000
 
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
@@ -29,12 +32,18 @@ defmodule Blog.Writer.PostWriter do
   end
 
   def get_posts_and_upsert() do
-    articles_on_github = posts_on_github()
-    upsert_articles(articles_on_github)
+    existing = load_existing_index()
+    post_category = Posts.get_category_by_slug("posts")
+
+    @url
+    |> do_request()
+    |> Enum.reject(&unchanged?(&1, existing))
+    |> Enum.map(&get_post(&1, post_category))
+    |> upsert_articles()
   end
 
   defp schedule_work do
-    Process.send_after(self(), :scheduled_work, 4 * 60 * 60 * 1000)
+    Process.send_after(self(), :scheduled_work, @poll_interval_ms)
   end
 
   def upsert_articles(new_articles) do
@@ -65,16 +74,23 @@ defmodule Blog.Writer.PostWriter do
     end)
   end
 
-  defp posts_on_github() do
-    post_category = Posts.get_category_by_slug("posts")
-
-    do_request(@url)
-    |> Enum.map(fn item ->
-      item
-      |> get_post(post_category)
-    end)
-    |> Enum.sort_by(& &1.slug, &>=/2)
+  defp load_existing_index() do
+    from(a in Article,
+      where: a.source == :github,
+      select: {a.slug, a.hash_id}
+    )
+    |> Repo.all()
+    |> Map.new(fn {slug, hash} -> {slug, %{hash_id: hash}} end)
   end
+
+  defp unchanged?(%{"name" => name, "sha" => github_sha}, existing) do
+    case Map.get(existing, slug_from_name(name)) do
+      %{hash_id: ^github_sha} -> true
+      _ -> false
+    end
+  end
+
+  defp slug_from_name(name), do: name |> String.split(".") |> hd()
 
   defp get_post(
          %{
@@ -101,7 +117,7 @@ defmodule Blog.Writer.PostWriter do
         date: Date.from_iso8601!(metadata.date),
         category_id: post_category.id,
         source: "github",
-        slug: name |> String.split(".") |> hd()
+        slug: slug_from_name(name)
       })
 
     Article.new_post(params)
