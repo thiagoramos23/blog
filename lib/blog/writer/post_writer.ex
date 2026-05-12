@@ -76,7 +76,7 @@ defmodule Blog.Writer.PostWriter do
 
   defp load_existing_index() do
     from(a in Article,
-      where: a.source == :github,
+      where: a.source == "github",
       select: {a.slug, a.hash_id}
     )
     |> Repo.all()
