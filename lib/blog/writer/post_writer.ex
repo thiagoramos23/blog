@@ -2,6 +2,7 @@ defmodule Blog.Writer.PostWriter do
   use GenServer
 
   import Ecto.Query
+  require Logger
 
   alias Blog.Posts
   alias Blog.Posts.Article
@@ -35,11 +36,23 @@ defmodule Blog.Writer.PostWriter do
     existing = load_existing_index()
     post_category = Posts.get_category_by_slug("posts")
 
-    @url
-    |> do_request()
-    |> Enum.reject(&unchanged?(&1, existing))
-    |> Enum.map(&get_post(&1, post_category))
-    |> upsert_articles()
+    case do_request(@url) do
+      {:ok, entries} when is_list(entries) ->
+        entries
+        |> Enum.reject(&unchanged?(&1, existing))
+        |> Enum.map(&get_post(&1, post_category))
+        |> upsert_articles()
+
+      {:error, reason} ->
+        # TODO: decide how to react to a failed GitHub fetch.
+        # See the conversation for the three approaches discussed.
+        handle_fetch_error(reason)
+    end
+  end
+
+  defp handle_fetch_error(reason) do
+    Logger.error("PostWriter fetch failed: #{inspect(reason)}")
+    []
   end
 
   defp schedule_work do
@@ -101,10 +114,8 @@ defmodule Blog.Writer.PostWriter do
          },
          post_category
        ) do
-    [post_metadata, post_content] =
-      donwload_url
-      |> do_request()
-      |> split_metadata_and_content()
+    {:ok, raw_body} = do_request(donwload_url)
+    [post_metadata, post_content] = split_metadata_and_content(raw_body)
 
     metadata = post_metadata |> parse_metadata()
 
@@ -148,8 +159,15 @@ defmodule Blog.Writer.PostWriter do
   end
 
   defp do_request(url) do
-    url
-    |> Req.get!(headers: headers(), params: [ref: @branch])
-    |> then(& &1.body)
+    case Req.get(url, headers: headers(), params: [ref: @branch]) do
+      {:ok, %Req.Response{status: status, body: body}} when status in 200..299 ->
+        {:ok, body}
+
+      {:ok, %Req.Response{status: status, body: body}} ->
+        {:error, {:status, status, body}}
+
+      {:error, exception} ->
+        {:error, {:exception, exception}}
+    end
   end
 end
