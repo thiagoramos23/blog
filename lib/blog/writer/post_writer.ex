@@ -44,8 +44,6 @@ defmodule Blog.Writer.PostWriter do
         |> upsert_articles()
 
       {:error, reason} ->
-        # TODO: decide how to react to a failed GitHub fetch.
-        # See the conversation for the three approaches discussed.
         handle_fetch_error(reason)
     end
   end
