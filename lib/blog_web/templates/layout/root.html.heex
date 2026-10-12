@@ -5,23 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content={csrf_token_value()}>
-    <title><%= assigns[:page_title] || "Thiago Ramos" %> - Elixir and programming in general</title>
-    <meta name="description" content="All of my not so long-form thoughts on programming, career, product design, and some life philosophy, all in chronological order.">
+    <% description = assigns[:page_description] || "All of my not so long-form thoughts on programming, career, product design, and some life philosophy, all in chronological order." %>
+    <% title = if assigns[:apps_active], do: "#{assigns[:page_title]} | Apps by Thiago Ramos", else: "#{assigns[:page_title] || "Thiago Ramos"} - Elixir and programming in general" %>
+    <% page_url = "https://thiagoramos.me#{URI.parse(assigns[:page_path] || "").path || ""}" %>
+    <% page_image = if assigns[:page_image], do: "https://thiagoramos.me#{assigns[:page_image]}", else: "https://cxzchryqsvjyzkxvjmxj.supabase.co/storage/v1/object/public/blog_images/website.png" %>
+    <Phoenix.Component.live_title suffix={if assigns[:apps_active], do: " | Apps by Thiago Ramos", else: " - Elixir and programming in general"}><%= assigns[:page_title] || "Thiago Ramos" %></Phoenix.Component.live_title>
+    <link :if={assigns[:apps_active]} rel="canonical" href={page_url} />
+    <meta name="description" content={description}>
     <meta name="keywords" content="learning, education, tutorial, web development, elixir, phoenix, web framework, mix, programming, career"/>
     <!-- Facebook Meta Tags -->
-    <meta property="og:url" content="https://thiagoramos.me">
+    <meta property="og:url" content={page_url}>
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Thiago Ramos - Elixir and programming in general">
-    <meta property="og:description" content="All of my not so long-form thoughts on programming, career, product design, and some life philosophy, all in chronological order.">
-    <meta property="og:image" content="https://cxzchryqsvjyzkxvjmxj.supabase.co/storage/v1/object/public/blog_images/website.png">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:image" content={page_image}>
     
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="thiagoramos.me" />
     <meta name="twitter:creator" content="@thramosal" />
-    <meta name="twitter:title" content="Thiago Ramos - Elixir and programming in general">
-    <meta name="twitter:description" content="All of my not so long-form thoughts on programming, career, product design, and some life philosophy, all in chronological order.">
-    <meta name="twitter:image" content="https://cxzchryqsvjyzkxvjmxj.supabase.co/storage/v1/object/public/blog_images/website.png">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={page_image}>
     
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>

@@ -1,0 +1,32 @@
+<% app = assigns[:app] %>
+<% current_admin = assigns[:current_admin] %>
+<div class="apps-shell">
+  <a href="#apps-main" class="apps-skip-link">Skip to content</a>
+  <nav class="apps-masthead" aria-label="Main navigation">
+    <a class="apps-brand" href="/" aria-label="Thiago Ramos home"><span aria-hidden="true">tr.</span> Thiago Ramos</a>
+    <div class="apps-nav-items">
+      <a href="/apps" aria-current={if assigns[:apps_active], do: "page", else: nil}>Apps</a>
+      <a href="/" aria-current={if assigns[:articles_active], do: "page", else: nil}>Articles</a>
+      <a href="/about">About</a>
+    </div>
+    <a class="apps-button apps-nav-cta" href={if app, do: app.url, else: if(assigns[:apps_active], do: "#the-apps", else: "/apps")}><%= if app, do: "Try #{app.name}", else: "Explore apps" %></a>
+  </nav>
+  <div :if={current_admin} class="site-admin-bar">
+    <span><%= current_admin.email %></span>
+    <a href={~p"/admin/articles"}>Admin</a>
+    <a href={~p"/admin/admins/settings"}>Settings</a>
+    <%= link("Log out", to: ~p"/admin/admins/log_out", method: :delete) %>
+  </div>
+  <main id="apps-main">
+    <div class="site-flashes">
+      <p :if={Phoenix.Flash.get(@flash, :info)} role="status"><%= Phoenix.Flash.get(@flash, :info) %></p>
+      <p :if={Phoenix.Flash.get(@flash, :error)} role="alert"><%= Phoenix.Flash.get(@flash, :error) %></p>
+    </div>
+    <%= @inner_content %>
+  </main>
+  <footer class="apps-footer">
+    <a href="/" class="apps-brand"><span aria-hidden="true">tr.</span> Thiago Ramos</a>
+    <nav aria-label="Footer navigation"><a href="/apps">Apps</a><a href="/">Articles</a><a href="/about">About</a></nav>
+    <p>© <%= Date.utc_today().year %> Thiago Ramos</p>
+  </footer>
+</div>

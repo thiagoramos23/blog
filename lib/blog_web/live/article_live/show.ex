@@ -10,7 +10,8 @@ defmodule BlogWeb.ArticleLive.Show do
      socket
      |> assign(:total_readers, 0)
      |> assign(:about_active, false)
-     |> assign(:total_read_time, 0)}
+     |> assign(:total_read_time, 0)
+     |> assign(:articles_active, true), layout: {BlogWeb.LayoutView, :marketing}}
   end
 
   @impl true
@@ -20,7 +21,9 @@ defmodule BlogWeb.ArticleLive.Show do
     {:noreply,
      socket
      |> assign(:article, article)
-     |> assign(:page_title, "Thiago Ramos - #{article.title}")
+     |> assign(:page_title, article.title)
+     |> assign(:page_description, article.summary)
+     |> assign(:page_path, URI.parse(url).path)
      |> assign(:total_read_time, get_total_read_time(article))
      |> assign(:total_readers, get_total_readers(url))}
   end

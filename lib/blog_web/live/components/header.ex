@@ -11,7 +11,7 @@ defmodule BlogWeb.Components.Header do
           <div class="mx-auto max-w-7xl lg:px-8">
             <div class="relative px-4 sm:px-8 lg:px-12">
               <div class="max-w-2xl mx-auto lg:max-w-5xl">
-                <div class="relative flex gap-4">
+                <div class="relative flex gap-2 sm:gap-4">
                   <div class="flex flex-1">
                     <div class="h-10 w-10 rounded-full bg-white/90 p-0.5 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:ring-white/10">
                       <a aria-label="Home" class="pointer-events-auto" href="/">
@@ -24,7 +24,7 @@ defmodule BlogWeb.Components.Header do
                       <button class="flex items-center px-4 py-2 text-sm font-medium rounded-full shadow-lg group bg-white/90 text-zinc-800 shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:text-zinc-200 dark:ring-white/10 dark:hover:ring-white/20" id="headlessui-popover-button-:Rqb6:" type="button" aria-expanded="false" data-headlessui-state="">Menu<svg viewBox="0 0 8 6" aria-hidden="true" class="w-2 h-auto ml-3 stroke-zinc-500 group-hover:stroke-zinc-700 dark:group-hover:stroke-zinc-400"><path d="M1.75 1.75 4 4.25l2.25-2.5" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                       </button>
                     </div>
-                    <nav class="hidden pointer-events-auto md:block">
+                    <nav class="pointer-events-auto" aria-label="Main navigation">
                       <%= render_slot(@inner_block) %>
                     </nav>
                   </div>
