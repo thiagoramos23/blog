@@ -1,0 +1,67 @@
+<div class="apps-page">
+
+  <header class={ ["apps-hero", @app && "apps-detail-hero"] }>
+    <div class="apps-hero-copy">
+      <%= if @app do %>
+        <a href={~p"/apps"} class="apps-back">← All apps</a>
+        <p class="apps-eyebrow"><%= @app.name %> / <%= @app.category %></p>
+        <h1><%= @app.headline %></h1>
+        <p class="apps-lead"><%= @app.summary %></p>
+        <div class="apps-actions"><a href={@app.url} class="apps-button">Try <%= @app.name %> <span aria-hidden="true">↗</span></a><a href="#inside-the-app" class="apps-secondary-button">Take a look inside <span aria-hidden="true">↓</span></a></div>
+      <% else %>
+        <p class="apps-eyebrow">SMALL APPS. EVERYDAY USE.</p>
+        <h1>Good tools.<br />More time for you.</h1>
+        <p class="apps-lead">A place for your next read. A plan for your next day. Two apps I built to make everyday life a little simpler.</p>
+        <div class="apps-actions"><a href="#the-apps" class="apps-button">Explore the apps <span aria-hidden="true">↓</span></a><a href="/about" class="apps-secondary-button">Meet the maker <span aria-hidden="true">→</span></a></div>
+      <% end %>
+      <div class="apps-hero-foot"><span class="apps-status-dot" aria-hidden="true"></span> Built by Thiago Ramos. Available on the web.</div>
+    </div>
+    <div class={ ["apps-hero-visual", !@app && "apps-hero-stack"] }>
+      <div class="apps-orbits" aria-hidden="true"></div>
+      <figure :for={app <- if @app, do: [@app], else: @apps} class={ ["apps-hero-window", "apps-window-#{app.slug}"] }>
+        <div class="apps-browser-bar"><span class="apps-browser-dots" aria-hidden="true">● ● ●</span><span><%= app.domain %></span><span aria-hidden="true">↗</span></div>
+        <a href={if @app, do: app.image, else: ~p"/apps/#{app.slug}"} aria-label={if @app, do: "View full screenshot of #{app.name}", else: "Discover #{app.name}"}>
+          <img src={app.image} alt={app.image_alt} width="1280" height="800" />
+        </a>
+        <figcaption><%= app.name %><%= if app.slug == "todo", do: " · Home" %> · Sample data</figcaption>
+      </figure>
+    </div>
+  </header>
+
+  <%= if @live_action == :index do %>
+    <section id="the-apps" class="apps-collection apps-feature-band" aria-labelledby="collection-heading">
+      <div class="apps-section-heading"><p class="apps-eyebrow">THE COLLECTION</p><h2 id="collection-heading">A place to read.<br />A plan for your day.</h2><p>Find the app that fits the way you spend your time.</p></div>
+      <article :for={{app, index} <- Enum.with_index(@apps, 1)} class="apps-product">
+        <div class="apps-product-copy">
+          <p class="apps-eyebrow"><span class="apps-number">0<%= index %></span> <%= app.category %></p>
+          <h3><a href={~p"/apps/#{app.slug}"}><%= app.name %> <span aria-hidden="true">↗</span></a></h3>
+          <p class="apps-tagline"><%= app.headline %></p>
+          <p class="apps-description"><%= app.summary %></p>
+          <a href={~p"/apps/#{app.slug}"} class="apps-text-link" id={"discover-#{app.slug}"}>Discover <%= app.name %> <span aria-hidden="true">→</span></a>
+        </div>
+        <a href={~p"/apps/#{app.slug}"} class="apps-preview" aria-label={"Discover #{app.name}"}>
+          <div class="apps-browser-bar"><span class="apps-browser-dots" aria-hidden="true">● ● ●</span><span><%= app.domain %></span><span aria-hidden="true">↗</span></div>
+          <img src={app.image} alt={app.image_alt} width="1280" height="800" loading="lazy" />
+        </a>
+      </article>
+    </section>
+    <section class="apps-closing"><p class="apps-eyebrow">WHY I BUILD</p><h2>Useful software.<br />Made personal.</h2><p>These started with things I wanted in my own day.<br />If they help yours too, even better.</p><a href="/about" class="apps-button">A little about me <span aria-hidden="true">→</span></a></section>
+  <% else %>
+    <section id="inside-the-app" class="apps-feature-band apps-detail-content" aria-labelledby="detail-heading">
+      <div class="apps-detail-intro"><p class="apps-eyebrow">A LITTLE LESS FRICTION</p><h2 id="detail-heading"><%= @app.detail_heading %></h2><p><%= @app.detail %></p></div>
+      <div class="apps-features"><section :for={{ {title, copy}, index} <- Enum.with_index(@app.features, 1)}><span class="apps-feature-icon" aria-hidden="true">0<%= index %></span><h3><%= title %></h3><p><%= copy %></p></section></div>
+    </section>
+    <%= if @app[:pages] do %>
+      <section class="apps-tour" aria-labelledby="tour-heading">
+        <div class="apps-tour-heading"><p class="apps-eyebrow">A CLOSER LOOK</p><h2 id="tour-heading">Explore <%= @app.name %>, page by page.</h2><p>Real screens with sample data. Open any screenshot for a closer look.</p></div>
+        <article :for={{slug, name, heading, copy} <- @app.pages} class="apps-tour-page" id={"tour-#{slug}"}>
+          <div><p class="apps-eyebrow"><%= name %></p><h3><%= heading %></h3><p class="apps-description"><%= copy %></p></div>
+          <figure><a href={"/images/apps/#{@app.slug}-#{slug}.png"} target="_blank" rel="noopener" aria-label={"View full screenshot of #{name}"}><img src={"/images/apps/#{@app.slug}-#{slug}.png"} alt={"#{@app.name} #{name} view with sample data"} width="1280" height="800" loading="lazy" /></a><figcaption><%= name %> · Sample data</figcaption></figure>
+        </article>
+      </section>
+    <% else %>
+    <section class="apps-second-feature" aria-labelledby="second-heading"><div><p class="apps-eyebrow">IN THE DETAILS</p><h2 id="second-heading"><%= @app.second_heading %></h2><p><%= @app.second_copy %></p></div><figure><a href={@app.second_image} target="_blank" rel="noopener" aria-label={"View another screenshot of #{@app.name}"}><img src={@app.second_image} alt={@app.second_alt} width="1280" height="800" loading="lazy" /></a><figcaption>Real app. Sample data.</figcaption></figure></section>
+    <% end %>
+    <section class="apps-closing"><p class="apps-eyebrow">MAKE IT PART OF YOUR DAY</p><h2><%= @app.headline %></h2><a href={@app.url} class="apps-button">Try <%= @app.name %> <span aria-hidden="true">↗</span></a><a href={~p"/apps"} class="apps-back">Explore both apps →</a></section>
+  <% end %>
+</div>

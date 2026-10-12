@@ -3,6 +3,8 @@
 @import './prism.css';
 @import './highlight.css';
 @import "tailwindcss/utilities";
+@import "./apps.css";
+@import "./articles.css";
 
 /* This file is for your main application CSS */
 

@@ -64,6 +64,8 @@ defmodule BlogWeb.Router do
       live "/articles/:slug", ArticleLive.Show, :show
 
       live "/about", AboutLive.Index, :index
+      live "/apps", AppLive.Index, :index
+      live "/apps/:slug", AppLive.Index, :show
     end
 
     get "/feed", FeedController, :index

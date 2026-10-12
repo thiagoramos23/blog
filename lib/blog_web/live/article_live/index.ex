@@ -9,12 +9,14 @@ defmodule BlogWeb.ArticleLive.Index do
      socket
      |> assign(:articles, list_articles())
      |> assign(:page_path, "")
-     |> assign(:about_active, false)}
+     |> assign(:about_active, false)
+     |> assign(:articles_active, true)
+     |> assign(:page_title, "Articles"), layout: {BlogWeb.LayoutView, :marketing}}
   end
 
   @impl true
   def handle_params(_params, url, socket) do
-    {:noreply, assign(socket, :page_path, url)}
+    {:noreply, assign(socket, :page_path, URI.parse(url).path)}
   end
 
   defp list_articles do
