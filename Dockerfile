@@ -7,18 +7,18 @@
 # This file is based on these images:
 #
 #   - https://hub.docker.com/r/hexpm/elixir/tags - for the build image
-#   - https://hub.docker.com/_/debian?tab=tags&page=1&name=bullseye-20260610-slim - for the release image
+#   - https://hub.docker.com/_/debian?tab=tags&page=1&name=bookworm-20260610-slim - for the release image
 #   - https://pkgs.org/ - resource for finding needed packages
-#   - Ex: hexpm/elixir:1.18.2-erlang-27.2.2-debian-bullseye-20260610-slim
+#   - Ex: hexpm/elixir:1.18.2-erlang-27.2.2-debian-bookworm-20260610-slim
 #
 ARG ELIXIR_VERSION=1.18.2
 ARG OTP_VERSION=27.2.2
-ARG DEBIAN_VERSION=bullseye-20260610-slim
+ARG DEBIAN_VERSION=bookworm-20260610-slim
 ARG NODE_VERSION=22
 
 ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
 ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
-ARG NODE_IMAGE="node:${NODE_VERSION}-bullseye-slim"
+ARG NODE_IMAGE="node:${NODE_VERSION}-bookworm-slim"
 
 FROM ${NODE_IMAGE} AS node
 
@@ -80,7 +80,7 @@ RUN mix release
 FROM ${RUNNER_IMAGE}
 
 RUN apt-get update -y && \
-  apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates \
+  apt-get install -y libstdc++6 openssl libncurses6 locales ca-certificates \
   && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale
